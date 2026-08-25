@@ -62,7 +62,8 @@ export async function GET(request: NextRequest) {
 
   // 1. Try FastAPI backend TTS service if available
   try {
-    const backendUrl = `http://127.0.0.1:8000/api/v1/voice/tts?lang=${encodeURIComponent(lang)}&text=${encodeURIComponent(cleanedText.slice(0, 500))}`;
+    const apiBase = (process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_API_URL || "http://127.0.0.1:8000/api/v1").replace(/\/$/, "");
+    const backendUrl = `${apiBase}/voice/tts?lang=${encodeURIComponent(lang)}&text=${encodeURIComponent(cleanedText.slice(0, 500))}`;
     const res = await fetch(backendUrl, { cache: "no-store" });
     if (res.ok) {
       const audioBuffer = await res.arrayBuffer();

@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Search, CheckCircle2, ShieldCheck, Landmark, FileCheck, Building2, Wallet } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { API_BASE_URL } from "@/lib/api";
 
 function TrackPageContent() {
   const searchParams = useSearchParams();
@@ -46,7 +47,7 @@ function TrackPageContent() {
 
     // 2. Try Backend API
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/v1/routing/applications/${encodeURIComponent(cleanId)}`);
+      const res = await fetch(`${API_BASE_URL}/routing/applications/${encodeURIComponent(cleanId)}`);
       if (res.ok) {
         const data = await res.json();
         setAppDetails(data);

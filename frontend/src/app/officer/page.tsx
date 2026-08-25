@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { UserCheck, FileText, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { API_BASE_URL } from "@/lib/api";
 
 export default function OfficerPage() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function OfficerPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/api/v1/routing/officer/leads");
+      const res = await fetch(`${API_BASE_URL}/routing/officer/leads`);
       if (res.ok) {
         const data = await res.json();
         const combined = [...userApps, ...data.filter((d: any) => !userApps.some((u: any) => u.application_id === d.application_id))];
@@ -85,7 +86,7 @@ export default function OfficerPage() {
   const handleSignOffInspection = async (appId: string) => {
     const cleanId = appId.replace("#", "").trim();
     try {
-      await fetch(`http://localhost:8000/api/v1/routing/applications/${encodeURIComponent(cleanId)}/update-status`, {
+      await fetch(`${API_BASE_URL}/routing/applications/${encodeURIComponent(cleanId)}/update-status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ new_status: "FIELD_INSPECTED" }),
