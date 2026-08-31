@@ -33,7 +33,7 @@ export const EmiCalculatorMatrix: React.FC<EmiCalculatorMatrixProps> = ({
   const [annualIncome, setAnnualIncome] = useState(initialIncome);
   const [gender, setGender] = useState(initialGender);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSchemeId, setSelectedSchemeId] = useState("NSFDC_MCF_AP_1");
+  const [selectedSchemeId, setSelectedSchemeId] = useState("NSFDC_MCF");
 
   const [matchedSchemesList, setMatchedSchemesList] = useState<StatutoryScheme[]>([]);
   const [calcResult, setCalcResult] = useState<FinancialCalculationResponse | null>(null);

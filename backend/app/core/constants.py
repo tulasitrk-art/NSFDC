@@ -1,8 +1,12 @@
-# Statutory NSFDC Constants & Scheme Directory (10 Schemes)
+import os
+import json
+from typing import Dict, Any, List
 
+# Statutory NSFDC Constants & Comprehensive Scheme Directory (330 Schemes)
 INCOME_CEILING_INR = 500000.00
 
-STATUTORY_SCHEMES = {
+# Base fallback dictionary for 10 Core NSFDC Schemes
+CORE_STATUTORY_SCHEMES: Dict[str, Dict[str, Any]] = {
     "NSFDC_MCF": {
         "scheme_id": "NSFDC_MCF",
         "scheme_name": "Micro Credit Finance Scheme (MCF)",
@@ -134,6 +138,24 @@ STATUTORY_SCHEMES = {
         "description": "Agriculture, goat rearing, floriculture exclusively for SC women farmers."
     }
 }
+
+def _load_all_schemes() -> Dict[str, Dict[str, Any]]:
+    """Loads all 330+ schemes from schemes_catalog.json and merges with CORE schemes."""
+    schemes_dict = dict(CORE_STATUTORY_SCHEMES)
+    catalog_file = os.path.join(os.path.dirname(__file__), "schemes_catalog.json")
+    if os.path.exists(catalog_file):
+        try:
+            with open(catalog_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                for item in data:
+                    s_id = item.get("scheme_id")
+                    if s_id:
+                        schemes_dict[s_id] = item
+        except Exception as e:
+            print(f"Warning: Failed to load schemes_catalog.json: {e}")
+    return schemes_dict
+
+STATUTORY_SCHEMES: Dict[str, Dict[str, Any]] = _load_all_schemes()
 
 INDIAN_STATES = [
     {"code": "AP", "name": "Andhra Pradesh"},

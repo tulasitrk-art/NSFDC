@@ -99,40 +99,37 @@ export async function calculateFinancials(req: FinancialCalculationRequest): Pro
     console.warn("Backend calculation fallback");
   }
 
-  // Dynamic Fallback Matrix Math
+  // Dynamic Fallback Matrix Math from 330 Schemes Catalog
   const cost = req.project_cost;
   const isFemale = req.gender === "FEMALE";
-
+  
   let rate = 6.0;
   let govtShare = 90;
   let schemeName = "Micro Credit Finance Scheme (MCF)";
+  let moratorium = 3;
+  let tenure = 3;
 
-  if (req.scheme_id === "NSFDC_MSY" || (isFemale && cost <= 140000)) {
-    rate = 5.0;
-    govtShare = 95;
-    schemeName = "Mahila Samriddhi Yojana (MSY)";
-  } else if (req.scheme_id === "NSFDC_ELS_O") {
-    rate = 4.0;
-    govtShare = 90;
-    schemeName = "Overseas Educational Loan Scheme";
-  } else if (req.scheme_id === "NSFDC_ELS_D") {
-    rate = 4.0;
-    govtShare = 90;
-    schemeName = "Educational Loan Scheme (Domestic)";
-  } else if (req.scheme_id === "NSFDC_GBS") {
-    rate = 6.0;
-    govtShare = 90;
-    schemeName = "Green Business Scheme (GBS)";
-  } else if (cost > 140000) {
-    rate = isFemale ? 6.5 : 7.5;
-    govtShare = 90;
-    schemeName = "Term Loan Scheme (General)";
+  try {
+    const { getSchemeById } = require("./schemes_db");
+    const sch = getSchemeById(req.scheme_id);
+    if (sch) {
+      schemeName = sch.name;
+      govtShare = sch.govtSharePercent || 90;
+      rate = isFemale ? sch.interestFemale : (sch.interestMale > 50 ? sch.interestFemale : sch.interestMale);
+      moratorium = sch.moratoriumMonths || 3;
+      tenure = sch.repaymentYears || 3;
+    }
+  } catch (err) {
+    // fallback defaults
   }
 
   const principal = Math.round((cost * govtShare) / 100);
   const margin = cost - principal;
+  const activeMonths = (tenure * 12) - moratorium;
   const monthlyRate = rate / 12 / 100;
-  const emi = Math.round((principal * monthlyRate * Math.pow(1 + monthlyRate, 60)) / (Math.pow(1 + monthlyRate, 60) - 1));
+  const emi = activeMonths > 0 
+    ? Math.round((principal * monthlyRate * Math.pow(1 + monthlyRate, activeMonths)) / (Math.pow(1 + monthlyRate, activeMonths) - 1))
+    : Math.round(principal / 36);
 
   return {
     project_cost: cost,
@@ -145,11 +142,11 @@ export async function calculateFinancials(req: FinancialCalculationRequest): Pro
     principal_loan_amount: principal,
     beneficiary_margin_percent: 100 - govtShare,
     beneficiary_margin_money: margin,
-    moratorium_months: 6,
-    repayment_years: 5,
-    total_tenure_years: 5,
-    active_repayment_months: 54,
-    monthly_emi: emi || Math.round(principal / 60),
+    moratorium_months: moratorium,
+    repayment_years: tenure,
+    total_tenure_years: tenure,
+    active_repayment_months: activeMonths,
+    monthly_emi: emi || Math.round(principal / (tenure * 12)),
     statutory_income_gate_passed: req.annual_family_income <= 500000,
   };
 }
