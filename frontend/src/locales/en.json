@@ -101,17 +101,17 @@
     "districtLocation": "District / State Location"
   },
   "channels": {
-    "badge": "PostGIS Geodesic & Health Router (R_score Engine)",
-    "heading": "Channel Partner Spatial Locator & Lead Routing Hub",
-    "subheading": "Branches within radius are filtered against quota & NPA pruning gates (NPA < 15%) and ranked by composite score R_score.",
-    "setLocation": "Set Applicant Location:",
-    "boundingRadius": "Bounding Radius:",
-    "spatialMapTitle": "Interactive PostGIS Spatial Map",
-    "validRoutesFound": "Valid Routes Found",
-    "rankedBranches": "Ranked Branch Lead Desks (R_score)",
-    "availableQuota": "Available Quota",
-    "branchNpa": "Branch NPA %",
-    "oneClickDispatch": "1-Click Dispatch"
+    "badge": "Spatial Routing & Allocation",
+    "heading": "Channel Partner Bank & SCA Locator",
+    "subheading": "Pan-India geodesic spatial routing engine evaluating lending quotas, NPA filters (< 15%), and distance across all 28 States & UTs.",
+    "setLocation": "Applicant Coordinates",
+    "boundingRadius": "Search Radius",
+    "spatialMapTitle": "Live Leaflet Geo-Spatial Visualizer",
+    "validRoutesFound": "Eligible Routes Found",
+    "rankedBranches": "Ranked Channel Partner Branches",
+    "availableQuota": "Available Lending Quota",
+    "branchNpa": "Branch NPA Ratio",
+    "oneClickDispatch": "1-Click Lead Dispatch"
   },
   "schemes": {
     "badge": "Statutory Guidelines & Scheme Directory",
@@ -124,7 +124,113 @@
     "gate2Desc": "Must belong to Scheduled Caste (SC) community. Authenticated via Revenue Dept OCR parsing.",
     "gate3Title": "3. Concessional Rates",
     "gate3Desc": "Female beneficiaries receive additional interest concession across all schemes.",
-    "matrixTitle": "NSFDC Statutory Schemes Comparison Matrix"
+    "matrixTitle": "NSFDC Statutory Schemes Comparison Matrix",
+    "catalogSize": "Catalog Size:",
+    "activeSchemes": "Active Schemes",
+    "repositoryTitle": "National & State Concessional Loan Repository",
+    "directoryTitle": "Comprehensive Statutory Scheme Directory (330+ Schemes)",
+    "directoryDesc": "Explore 10 Core NSFDC Schemes, 20 Central Apex Corporation Programs, and 300 State Channelizing Agency (SCDC) subsidized loans across 30 States & Union Territories for FY 2026-27.",
+    "totalSchemes": "Total Schemes",
+    "totalPrograms": "Programs",
+    "interestRates": "Interest Rates",
+    "interestRange": "4.0% - 7.5% p.a.",
+    "maxLoanCap": "Max Loan Cap",
+    "maxCapValue": "Up to ₹ 50.00 Lakhs",
+    "govtShare": "Govt Share",
+    "govtFunding": "Up to 95% Funding",
+    "rulesAlertTitle": "Statutory Eligibility & Hard Gate Protocols (Enforced Pan-India)",
+    "rule1Title": "1. Income Ceiling Rule",
+    "rule1Desc": "Annual family income must be ≤ ₹ 5,00,000.00 per annum (enforced via API Hard Gate).",
+    "rule2Title": "2. Caste Verification Rule",
+    "rule2Desc": "Must belong to Scheduled Caste (SC) or target beneficiary community verified via OCR.",
+    "rule3Title": "3. Women Concession Rule",
+    "rule3Desc": "Special 0.5% - 1.0% interest rebate and up to 95% government funding for female entrepreneurs.",
+    "searchPlaceholder": "Search across 330+ schemes by keyword, sector, or scheme name...",
+    "clear": "Clear",
+    "allIndia": "All India (National & State)",
+    "categories": {
+      "ALL": "All Schemes",
+      "MICRO": "Micro Credit",
+      "MICRO_WOMEN": "Women Special",
+      "TERM": "Term Capex",
+      "EDU_DOMESTIC": "Higher Education",
+      "GREEN_ENERGY": "Green & Solar",
+      "SANITATION": "Sanitation",
+      "ARTISAN": "Artisan & Crafts",
+      "SMALL_BUSINESS": "Small Business",
+      "AGRI_WOMEN": "Agri & Dairy"
+    },
+    "found": "Found",
+    "matchingSchemes": "matching schemes",
+    "inState": "in",
+    "underCat": "under",
+    "page": "Page",
+    "of": "of",
+    "noSchemesFound": "No matching schemes found",
+    "noSchemesDesc": "Try adjusting your search query, selecting 'All India', or resetting category filters.",
+    "resetFilters": "Reset All Filters",
+    "state": "State",
+    "femaleRate": "Female Rate",
+    "maleRate": "Male Rate",
+    "femaleOnly": "N/A (Female Only)",
+    "pa": "p.a.",
+    "moratorium": "Moratorium",
+    "tenure": "Tenure",
+    "mos": "Mos",
+    "yrs": "Yrs",
+    "applyUnderScheme": "Apply Under Scheme",
+    "schemeDetails": "Scheme Details",
+    "category": "Category",
+    "action": "Action",
+    "apply": "Apply",
+    "previous": "Previous",
+    "next": "Next",
+    "backToPrevious": "Back to Previous Step",
+    "interest": "Interest",
+    "govtFundingLabel": "Govt. Funding",
+    "maxProjectLimit": "Max Project Limit",
+    "items": {
+      "NSFDC_MCF": {
+        "title": "Micro Credit Finance Scheme (MCF)",
+        "description": "Direct micro-credit loans for small business, vending, artisans, and rural micro-enterprises."
+      },
+      "NSFDC_MSY": {
+        "title": "Mahila Samriddhi Yojana (MSY)",
+        "description": "Specialized concessional loan for Scheduled Caste female entrepreneurs with maximum government share."
+      },
+      "NSFDC_TL": {
+        "title": "Term Loan Scheme (General)",
+        "description": "Capital expenditure financing for commercial transport, manufacturing, and agro-processing units."
+      },
+      "NSFDC_ELS_D": {
+        "title": "Educational Loan Scheme (Domestic)",
+        "description": "Higher professional education financing in India (Engineering, Medicine, Law, Management)."
+      },
+      "NSFDC_ELS_O": {
+        "title": "Overseas Educational Loan Scheme",
+        "description": "Concessional credit for post-graduate and doctoral studies in foreign universities."
+      },
+      "NSFDC_GBS": {
+        "title": "Green Business Scheme (GBS)",
+        "description": "Financial assistance for eco-friendly business activities (Battery Rickshaws, Solar Energy, Waste Mgmt)."
+      },
+      "NSFDC_SWSS": {
+        "title": "Sanitation Workers Special Scheme",
+        "description": "Concessional credit for sanitation workers and liberated manual scavengers for alternative dignified livelihoods."
+      },
+      "NSFDC_SKYS": {
+        "title": "Shilpi Samriddhi Yojana (Artisan Scheme)",
+        "description": "Subsidized term loan assistance for traditional SC artisans, handicrafts, and handloom weavers."
+      },
+      "NSFDC_VBS": {
+        "title": "Vending & Micro Business Scheme",
+        "description": "Working capital financing for urban street vendors, hawkers, and weekly market traders."
+      },
+      "NSFDC_DAIRY": {
+        "title": "Dairy & Animal Husbandry Scheme",
+        "description": "Concessional loans for milch cattle purchase, poultry farming, goat rearing, and milk chilling infrastructure."
+      }
+    }
   },
   "track": {
     "badge": "Real-time Application Tracker • GIGW Standard",
@@ -277,5 +383,47 @@
     "signaturePlaceholder": "Signature / Thumb Impression of Beneficiary",
     "downloadPdf": "🖨️ Download / Print Official Application (PDF)",
     "close": "Close Preview"
+  },
+  "map": {
+    "routerTitle": "Pan-India Channel Partner Bank & SCA Spatial Router",
+    "routerSubtitle": "Select any Indian State or UT to view interactive map pins and detailed branch credit metrics.",
+    "selectState": "Select State:",
+    "allStates": "All 28 States & UTs (Pan-India)",
+    "osmTitle": "Interactive OpenStreetMap Visualizer",
+    "stateCode": "State Code:",
+    "updatingPins": "Updating Map Pins for",
+    "loadingMap": "Loading Pan-India Interactive Leaflet Map...",
+    "branchesInState": "Branches in Selected State",
+    "branchDesks": "Branch Desks",
+    "rScore": "R_score Index:",
+    "npaRate": "Branch NPA Rate",
+    "healthyNpa": "(Healthy <15%)",
+    "creditQuota": "Available Credit Quota",
+    "officer": "Officer:",
+    "selectedAddress": "📍 Selected Branch Detailed Address:",
+    "physicalAddress": "Physical Branch Address:",
+    "selectedForDispatch": "Selected Branch for Dispatch ✓",
+    "selectForDispatch": "Select Branch for Dispatch →",
+    "noBranches": "No active branch desks found for state code:",
+    "noBranchesPrompt": "Select another state or 'All Pan-India'.",
+    "legendTitle": "R_score Pin Index Legend",
+    "legendGreen": "Green: Top Route (R_score ≥ 0.70)",
+    "legendYellow": "Yellow: Valid Alternative (0.50 ≤ R_score < 0.70)",
+    "legendRed": "Red: High NPA / Pruned Route",
+    "applicantLocation": "Applicant Center Location",
+    "spatialSearchCenter": "Spatial Search Center",
+    "distance": "Distance:",
+    "kmAway": "KM away",
+    "status": "Status:",
+    "backStep": "← Back to Previous Step",
+    "partnerLocator": "Channel Partner Bank & SCA Locator",
+    "postgisRouter": "Pan-India PostGIS Health Router",
+    "routerDesc": "Geodesic spatial routing engine evaluating lending quotas, NPA filters (< 15%), and distance across all 28 States & UTs.",
+    "dispatchSuccess": "Application Lead Dispatched Successfully!",
+    "trackRefNumber": "Tracking Reference Number:",
+    "trackLifecycle": "Track Application Lifecycle →",
+    "rankedDesks": "Ranked Branch Desks",
+    "routesFound": "Routes",
+    "detailedAddress": "📍 Detailed Address:"
   }
 }

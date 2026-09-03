@@ -81,7 +81,7 @@ function ChannelsPageContent() {
           }}
           className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-100 text-slate-800 text-xs font-black shadow-sm transition-all cursor-pointer"
         >
-          <span>← Back to Previous Step</span>
+          <span>{t("map.backStep") || "← Back to Previous Step"}</span>
         </button>
       </div>
 
@@ -89,11 +89,11 @@ function ChannelsPageContent() {
       <div className="bg-[#002147] text-white p-6 sm:p-8 rounded-2xl border-b-4 border-gov-saffron shadow-md space-y-2">
         <div className="inline-flex items-center space-x-2 bg-gov-saffron/20 border border-gov-saffron/50 text-gov-saffron px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
           <Navigation className="w-4 h-4" />
-          <span>Pan-India PostGIS Health Router</span>
+          <span>{t("map.postgisRouter")}</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black">Channel Partner Bank & SCA Locator</h1>
+        <h1 className="text-2xl sm:text-3xl font-black">{t("map.partnerLocator")}</h1>
         <p className="text-xs sm:text-sm text-slate-200">
-          Geodesic spatial routing engine evaluating lending quotas, NPA filters (&lt; 15%), and distance across all 28 States & UTs.
+          {t("map.routerDesc")}
         </p>
       </div>
 
@@ -103,15 +103,15 @@ function ChannelsPageContent() {
           <div className="flex items-center space-x-3">
             <CheckCircle2 className="w-8 h-8 text-emerald-300 shrink-0" />
             <div>
-              <div className="text-xs font-bold text-emerald-200 uppercase tracking-wider">Application Lead Dispatched Successfully!</div>
-              <div className="text-xl font-black text-white">Tracking Reference Number: <span className="text-gov-gold">{dispatchedRef}</span></div>
+              <div className="text-xs font-bold text-emerald-200 uppercase tracking-wider">{t("map.dispatchSuccess")}</div>
+              <div className="text-xl font-black text-white">{t("map.trackRefNumber")} <span className="text-gov-gold">{dispatchedRef}</span></div>
             </div>
           </div>
           <a
             href={`/track?id=${dispatchedRef}`}
-            className="bg-gov-saffron hover:bg-amber-400 text-slate-950 font-black px-6 py-3 rounded-xl shadow text-xs whitespace-nowrap"
+            className="bg-gov-saffron hover:bg-amber-400 text-slate-950 font-black px-6 py-3 rounded-xl shadow text-xs whitespace-nowrap cursor-pointer"
           >
-            Track Application Lifecycle →
+            {t("map.trackLifecycle")}
           </a>
         </div>
       )}
@@ -132,8 +132,8 @@ function ChannelsPageContent() {
         {/* Branch Cards Column */}
         <div className="lg:col-span-5 space-y-4 max-h-[520px] overflow-y-auto pr-1">
           <div className="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200 pb-2">
-            <span>Ranked Branch Desks</span>
-            <span className="bg-gov-navy text-white px-2 py-0.5 rounded font-extrabold">{routeData?.valid_routes_found || routeData?.branches?.length || 0} Routes</span>
+            <span>{t("map.rankedDesks")}</span>
+            <span className="bg-gov-navy text-white px-2 py-0.5 rounded font-extrabold">{routeData?.valid_routes_found || routeData?.branches?.length || 0} {t("map.routesFound")}</span>
           </div>
 
           {routeData?.branches.map((b) => {
@@ -169,9 +169,9 @@ function ChannelsPageContent() {
                         ? "bg-amber-100 text-amber-800 border border-amber-300"
                         : "bg-red-100 text-red-800 border border-red-300"
                     }`}>
-                      R_score: {b.r_score.toFixed(2)}
+                      {t("map.rScore") || "R_score:"} {b.r_score.toFixed(2)}
                     </span>
-                    <div className="text-[10px] text-slate-400 mt-1 font-bold">{b.distance_km} KM away</div>
+                    <div className="text-[10px] text-slate-400 mt-1 font-bold">{b.distance_km} {t("map.kmAway") || "KM away"}</div>
                   </div>
                 </div>
 
@@ -185,7 +185,7 @@ function ChannelsPageContent() {
                     <MapPin className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isSelected ? "text-amber-700" : "text-gov-saffron"}`} />
                     <div>
                       <span className={`text-[10px] font-black uppercase block tracking-wider ${isSelected ? "text-amber-900" : "text-slate-500"}`}>
-                        {isSelected ? "📍 Selected Branch Detailed Address:" : "Physical Address:"}
+                        {isSelected ? t("map.selectedAddress") : t("map.physicalAddress")}
                       </span>
                       <p className="font-bold text-xs leading-snug text-slate-900">
                         {b.address || `${b.branch_name}, ${b.district || "District Office"}, ${b.state_code}`}
@@ -196,11 +196,11 @@ function ChannelsPageContent() {
 
                 <div className="grid grid-cols-2 gap-2 text-xs bg-slate-100 p-2.5 rounded-lg">
                   <div>
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Available Quota</span>
+                    <span className="text-[10px] text-slate-500 uppercase font-bold block">{t("map.creditQuota")}</span>
                     <strong className="text-slate-900 font-bold">₹ {(b.remaining_quota / 100000).toFixed(2)} Lakhs</strong>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Branch NPA</span>
+                    <span className="text-[10px] text-slate-500 uppercase font-bold block">{t("map.npaRate")}</span>
                     <strong className={b.npa_percent >= 15 ? "text-red-600 font-bold" : "text-emerald-700 font-bold"}>
                       {b.npa_percent}% {b.npa_percent >= 15 ? "(High NPA Pruned)" : ""}
                     </strong>
@@ -219,10 +219,10 @@ function ChannelsPageContent() {
                         e.stopPropagation();
                         handleDispatchLead(b);
                       }}
-                      className="bg-[#002147] hover:bg-[#001529] text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1 shadow transition-transform transform active:scale-95"
+                      className="bg-[#002147] hover:bg-[#001529] text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1 shadow transition-transform transform active:scale-95 cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5 text-gov-saffron" />
-                      <span>1-Click Dispatch</span>
+                      <span>{t("channels.oneClickDispatch") || "1-Click Dispatch"}</span>
                     </button>
                   )}
                 </div>

@@ -144,15 +144,15 @@ export default function SchemesPage() {
           className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-100 text-slate-800 text-xs font-black shadow-sm transition-all cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4" />
-          <span>Back to Previous Step</span>
+          <span>{t("schemes.backToPrevious") || "Back to Previous Step"}</span>
         </button>
 
         <div className="flex items-center space-x-2">
           <span className="text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">
-            Catalog Size:
+            {t("schemes.catalogSize") || "Catalog Size:"}
           </span>
           <span className="px-3 py-1 rounded-full bg-gov-navy text-white text-xs font-extrabold shadow-sm">
-            {ALL_STATUTORY_SCHEMES.length} Active Schemes
+            {ALL_STATUTORY_SCHEMES.length} {t("schemes.activeSchemes") || "Active Schemes"}
           </span>
         </div>
       </div>
@@ -165,35 +165,35 @@ export default function SchemesPage() {
 
         <div className="inline-flex items-center space-x-2 bg-gov-saffron/20 border border-gov-saffron/50 text-gov-saffron px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
           <BookOpen className="w-4 h-4" />
-          <span>National & State Concessional Loan Repository</span>
+          <span>{t("schemes.repositoryTitle")}</span>
         </div>
 
         <div className="max-w-3xl space-y-2">
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight">
-            Comprehensive Statutory Scheme Directory (330+ Schemes)
+            {t("schemes.directoryTitle")}
           </h1>
           <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
-            Explore 10 Core NSFDC Schemes, 20 Central Apex Corporation Programs, and 300 State Channelizing Agency (SCDC) subsidized loans across 30 States & Union Territories for FY 2026-27.
+            {t("schemes.directoryDesc")}
           </p>
         </div>
 
         {/* Quick Highlights Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
           <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15">
-            <div className="text-[11px] text-slate-300 font-medium">Total Schemes</div>
-            <div className="text-lg sm:text-xl font-black text-white">{ALL_STATUTORY_SCHEMES.length}+ Programs</div>
+            <div className="text-[11px] text-slate-300 font-medium">{t("schemes.totalSchemes")}</div>
+            <div className="text-lg sm:text-xl font-black text-white">{ALL_STATUTORY_SCHEMES.length}+ {t("schemes.totalPrograms")}</div>
           </div>
           <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15">
-            <div className="text-[11px] text-slate-300 font-medium">Interest Rates</div>
-            <div className="text-lg sm:text-xl font-black text-gov-saffron">4.0% - 7.5% p.a.</div>
+            <div className="text-[11px] text-slate-300 font-medium">{t("schemes.interestRates")}</div>
+            <div className="text-lg sm:text-xl font-black text-gov-saffron">{t("schemes.interestRange")}</div>
           </div>
           <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15">
-            <div className="text-[11px] text-slate-300 font-medium">Max Loan Cap</div>
-            <div className="text-lg sm:text-xl font-black text-emerald-400">Up to ₹ 50.00 Lakhs</div>
+            <div className="text-[11px] text-slate-300 font-medium">{t("schemes.maxLoanCap")}</div>
+            <div className="text-lg sm:text-xl font-black text-emerald-400">{t("schemes.maxCapValue")}</div>
           </div>
           <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15">
-            <div className="text-[11px] text-slate-300 font-medium">Govt Share</div>
-            <div className="text-lg sm:text-xl font-black text-gov-gold">Up to 95% Funding</div>
+            <div className="text-[11px] text-slate-300 font-medium">{t("schemes.govtShare")}</div>
+            <div className="text-lg sm:text-xl font-black text-gov-gold">{t("schemes.govtFunding")}</div>
           </div>
         </div>
       </div>
@@ -202,20 +202,20 @@ export default function SchemesPage() {
       <div className="bg-amber-50 border-2 border-amber-300 p-5 rounded-2xl space-y-3 shadow-sm">
         <div className="flex items-center space-x-2 font-black text-amber-950 text-sm">
           <ShieldCheck className="w-5 h-5 text-gov-saffron shrink-0" />
-          <span>Statutory Eligibility & Hard Gate Protocols (Enforced Pan-India)</span>
+          <span>{t("schemes.rulesAlertTitle")}</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-amber-900 font-medium">
           <div className="bg-white/90 p-3 rounded-xl border border-amber-200">
-            <strong className="block text-slate-900 font-bold mb-0.5">1. Income Ceiling Rule</strong>
-            Annual family income must be ≤ ₹ 5,00,000.00 per annum (enforced via API Hard Gate).
+            <strong className="block text-slate-900 font-bold mb-0.5">{t("schemes.rule1Title")}</strong>
+            {t("schemes.rule1Desc")}
           </div>
           <div className="bg-white/90 p-3 rounded-xl border border-amber-200">
-            <strong className="block text-slate-900 font-bold mb-0.5">2. Caste Verification Rule</strong>
-            Must belong to Scheduled Caste (SC) or target beneficiary community verified via OCR.
+            <strong className="block text-slate-900 font-bold mb-0.5">{t("schemes.rule2Title")}</strong>
+            {t("schemes.rule2Desc")}
           </div>
           <div className="bg-white/90 p-3 rounded-xl border border-amber-200">
-            <strong className="block text-slate-900 font-bold mb-0.5">3. Women Concession Rule</strong>
-            Special 0.5% - 1.0% interest rebate and up to 95% government funding for female entrepreneurs.
+            <strong className="block text-slate-900 font-bold mb-0.5">{t("schemes.rule3Title")}</strong>
+            {t("schemes.rule3Desc")}
           </div>
         </div>
       </div>
@@ -231,7 +231,7 @@ export default function SchemesPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search across 330+ schemes by keyword, sector, or scheme name..."
+              placeholder={t("schemes.searchPlaceholder") || "Search across 330+ schemes by keyword, sector, or scheme name..."}
               className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-gov-navy focus:outline-none"
             />
             {searchQuery && (
@@ -239,7 +239,7 @@ export default function SchemesPage() {
                 onClick={() => setSearchQuery("")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-slate-600"
               >
-                Clear
+                {t("schemes.clear") || "Clear"}
               </button>
             )}
           </div>
@@ -250,11 +250,11 @@ export default function SchemesPage() {
             <select
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
-              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-gov-navy focus:outline-none"
+              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-gov-navy focus:outline-none cursor-pointer"
             >
               {STATE_OPTIONS.map((st) => (
                 <option key={st.code} value={st.code}>
-                  {st.name}
+                  {st.code === "ALL" ? (t("schemes.allIndia") || st.name) : st.name}
                 </option>
               ))}
             </select>
@@ -289,31 +289,35 @@ export default function SchemesPage() {
 
         {/* Sector Category Pills */}
         <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-thin">
-          {CATEGORY_TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setSelectedCategory(tab.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1.5 ${
-                selectedCategory === tab.id
-                  ? "bg-[#002147] text-white shadow-md"
-                  : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100"
-              }`}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-            </button>
-          ))}
+          {CATEGORY_TABS.map((tab) => {
+            const catLabel = t(`schemes.categories.${tab.id}`);
+            const displayLabel = catLabel && !catLabel.startsWith("schemes.categories") ? catLabel : tab.label;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedCategory(tab.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1.5 ${
+                  selectedCategory === tab.id
+                    ? "bg-[#002147] text-white shadow-md"
+                    : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                <span>{tab.icon}</span>
+                <span>{displayLabel}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Results Counter Summary */}
         <div className="flex justify-between items-center text-xs font-bold text-slate-500 border-t border-slate-100 pt-3">
           <span>
-            Found <strong className="text-slate-900 font-extrabold">{filteredSchemes.length}</strong> matching schemes
-            {selectedState !== "ALL" && ` in ${selectedState}`}
-            {selectedCategory !== "ALL" && ` under ${selectedCategory}`}
+            {t("schemes.found")} <strong className="text-slate-900 font-extrabold">{filteredSchemes.length}</strong> {t("schemes.matchingSchemes")}
+            {selectedState !== "ALL" && ` ${t("schemes.inState")} ${selectedState}`}
+            {selectedCategory !== "ALL" && ` ${t("schemes.underCat")} ${t(`schemes.categories.${selectedCategory}`) || selectedCategory}`}
           </span>
           <span>
-            Page <strong className="text-slate-900 font-extrabold">{currentPage}</strong> of {totalPages}
+            {t("schemes.page")} <strong className="text-slate-900 font-extrabold">{currentPage}</strong> {t("schemes.of")} {totalPages}
           </span>
         </div>
       </div>
@@ -323,9 +327,9 @@ export default function SchemesPage() {
         <div className="bg-white p-12 rounded-2xl border border-slate-200 text-center space-y-4">
           <Layers className="w-12 h-12 text-slate-300 mx-auto" />
           <div className="space-y-1">
-            <h3 className="text-base font-extrabold text-slate-800">No matching schemes found</h3>
+            <h3 className="text-base font-extrabold text-slate-800">{t("schemes.noSchemesFound")}</h3>
             <p className="text-xs text-slate-500">
-              Try adjusting your search query, selecting "All India", or resetting category filters.
+              {t("schemes.noSchemesDesc")}
             </p>
           </div>
           <button
@@ -334,99 +338,108 @@ export default function SchemesPage() {
               setSelectedCategory("ALL");
               setSelectedState("ALL");
             }}
-            className="px-4 py-2 bg-gov-navy text-white text-xs font-bold rounded-xl hover:bg-gov-navy/90 transition-all"
+            className="px-4 py-2 bg-gov-navy text-white text-xs font-bold rounded-xl hover:bg-gov-navy/90 transition-all cursor-pointer"
           >
-            Reset All Filters
+            {t("schemes.resetFilters")}
           </button>
         </div>
       ) : viewMode === "grid" ? (
         /* GRID VIEW */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {paginatedSchemes.map((scheme) => (
-            <div
-              key={scheme.id}
-              className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all p-5 flex flex-col justify-between space-y-4 hover:border-gov-navy/40 relative group"
-            >
-              {/* Card Header */}
-              <div className="space-y-3">
-                <div className="flex justify-between items-start gap-2">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl p-2 bg-slate-50 border border-slate-100 rounded-xl">
-                      {scheme.icon || "✨"}
-                    </span>
-                    <div>
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-700">
-                        {scheme.code}
+          {paginatedSchemes.map((scheme) => {
+            const localizedTitleKey = `schemes.items.${scheme.id}.title`;
+            const localizedDescKey = `schemes.items.${scheme.id}.description`;
+            const titleTranslation = t(localizedTitleKey);
+            const descTranslation = t(localizedDescKey);
+            const displayTitle = titleTranslation && !titleTranslation.startsWith("schemes.items") ? titleTranslation : scheme.name;
+            const displayDesc = descTranslation && !descTranslation.startsWith("schemes.items") ? descTranslation : scheme.description;
+
+            return (
+              <div
+                key={scheme.id}
+                className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all p-5 flex flex-col justify-between space-y-4 hover:border-gov-navy/40 relative group"
+              >
+                {/* Card Header */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-2xl p-2 bg-slate-50 border border-slate-100 rounded-xl">
+                        {scheme.icon || "✨"}
                       </span>
-                      {scheme.targetStateCode && scheme.targetStateCode !== "ALL" && (
-                        <span className="ml-1.5 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          {scheme.targetStateCode} State
+                      <div>
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                          {scheme.code}
                         </span>
-                      )}
+                        {scheme.targetStateCode && scheme.targetStateCode !== "ALL" && (
+                          <span className="ml-1.5 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            {scheme.targetStateCode} {t("schemes.state")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-mono font-bold text-slate-400">
+                      {scheme.id}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="font-extrabold text-slate-900 text-sm leading-snug group-hover:text-gov-navy transition-colors">
+                      {displayTitle}
+                    </h3>
+                    <p className="text-xs text-slate-500 line-clamp-2 mt-1 font-medium">
+                      {displayDesc}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Financial Parameters Matrix */}
+                <div className="space-y-3 pt-3 border-t border-slate-100">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                      <span className="text-[10px] font-bold text-slate-400 block uppercase">{t("schemes.maxLoanCap")}</span>
+                      <span className="text-xs font-black text-slate-900">
+                        ₹ {scheme.maxCost.toLocaleString("en-IN")}
+                      </span>
+                    </div>
+                    <div className="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
+                      <span className="text-[10px] font-bold text-emerald-700 block uppercase">{t("schemes.govtShare")}</span>
+                      <span className="text-xs font-black text-emerald-800">
+                        {scheme.govtSharePercent}%
+                      </span>
+                    </div>
+                    <div className="bg-amber-50/60 p-2.5 rounded-xl border border-amber-100">
+                      <span className="text-[10px] font-bold text-amber-700 block uppercase">{t("schemes.femaleRate")}</span>
+                      <span className="text-xs font-black text-gov-saffron">
+                        {scheme.interestFemale}% {t("schemes.pa")}
+                      </span>
+                    </div>
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                      <span className="text-[10px] font-bold text-slate-400 block uppercase">{t("schemes.maleRate")}</span>
+                      <span className="text-xs font-black text-slate-700">
+                        {scheme.interestMale > 50 ? t("schemes.femaleOnly") : `${scheme.interestMale}% ${t("schemes.pa")}`}
+                      </span>
                     </div>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-slate-400">
-                    {scheme.id}
-                  </span>
-                </div>
 
-                <div>
-                  <h3 className="font-extrabold text-slate-900 text-sm leading-snug group-hover:text-gov-navy transition-colors">
-                    {scheme.name}
-                  </h3>
-                  <p className="text-xs text-slate-500 line-clamp-2 mt-1 font-medium">
-                    {scheme.description}
-                  </p>
+                  <div className="flex justify-between text-[11px] text-slate-500 font-semibold px-1">
+                    <span>{t("schemes.moratorium")}: <strong>{scheme.moratoriumMonths} {t("schemes.mos")}</strong></span>
+                    <span>{t("schemes.tenure")}: <strong>{scheme.repaymentYears} {t("schemes.yrs")}</strong></span>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="pt-2 flex items-center gap-2">
+                    <Link
+                      href={`/apply?scheme=${scheme.id}`}
+                      className="flex-1 bg-[#002147] hover:bg-[#001529] text-white py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 shadow-sm transition-all text-center cursor-pointer"
+                    >
+                      <span>{t("schemes.applyUnderScheme")}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
                 </div>
               </div>
-
-              {/* Financial Parameters Matrix */}
-              <div className="space-y-3 pt-3 border-t border-slate-100">
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                    <span className="text-[10px] font-bold text-slate-400 block uppercase">Max Loan Cap</span>
-                    <span className="text-xs font-black text-slate-900">
-                      ₹ {scheme.maxCost.toLocaleString("en-IN")}
-                    </span>
-                  </div>
-                  <div className="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
-                    <span className="text-[10px] font-bold text-emerald-700 block uppercase">Govt Share</span>
-                    <span className="text-xs font-black text-emerald-800">
-                      {scheme.govtSharePercent}%
-                    </span>
-                  </div>
-                  <div className="bg-amber-50/60 p-2.5 rounded-xl border border-amber-100">
-                    <span className="text-[10px] font-bold text-amber-700 block uppercase">Female Rate</span>
-                    <span className="text-xs font-black text-gov-saffron">
-                      {scheme.interestFemale}% p.a.
-                    </span>
-                  </div>
-                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                    <span className="text-[10px] font-bold text-slate-400 block uppercase">Male Rate</span>
-                    <span className="text-xs font-black text-slate-700">
-                      {scheme.interestMale > 50 ? "N/A (Female Only)" : `${scheme.interestMale}% p.a.`}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex justify-between text-[11px] text-slate-500 font-semibold px-1">
-                  <span>Moratorium: <strong>{scheme.moratoriumMonths} Mos</strong></span>
-                  <span>Tenure: <strong>{scheme.repaymentYears} Yrs</strong></span>
-                </div>
-
-                {/* Actions */}
-                <div className="pt-2 flex items-center gap-2">
-                  <Link
-                    href={`/apply?scheme=${scheme.id}`}
-                    className="flex-1 bg-[#002147] hover:bg-[#001529] text-white py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 shadow-sm transition-all text-center"
-                  >
-                    <span>Apply Under Scheme</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         /* TABLE VIEW */
@@ -435,57 +448,63 @@ export default function SchemesPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-[#002147] text-white font-bold uppercase tracking-wider">
                 <tr>
-                  <th className="p-4">Scheme Details</th>
-                  <th className="p-4">Category</th>
-                  <th className="p-4">State</th>
-                  <th className="p-4">Max Loan Cap</th>
-                  <th className="p-4">Govt Share</th>
-                  <th className="p-4">Female Rate</th>
-                  <th className="p-4">Male Rate</th>
-                  <th className="p-4">Moratorium</th>
-                  <th className="p-4">Action</th>
+                  <th className="p-4">{t("schemes.schemeDetails")}</th>
+                  <th className="p-4">{t("schemes.category")}</th>
+                  <th className="p-4">{t("schemes.state")}</th>
+                  <th className="p-4">{t("schemes.maxLoanCap")}</th>
+                  <th className="p-4">{t("schemes.govtShare")}</th>
+                  <th className="p-4">{t("schemes.femaleRate")}</th>
+                  <th className="p-4">{t("schemes.maleRate")}</th>
+                  <th className="p-4">{t("schemes.moratorium")}</th>
+                  <th className="p-4">{t("schemes.action")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 font-medium text-slate-800">
-                {paginatedSchemes.map((s) => (
-                  <tr key={s.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="p-4 max-w-sm">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-base">{s.icon || "✨"}</span>
-                        <div>
-                          <strong className="text-slate-900 block font-bold">{s.name}</strong>
-                          <span className="text-[10px] text-slate-400 font-mono">{s.id}</span>
+                {paginatedSchemes.map((s) => {
+                  const localizedTitleKey = `schemes.items.${s.id}.title`;
+                  const titleTranslation = t(localizedTitleKey);
+                  const displayTitle = titleTranslation && !titleTranslation.startsWith("schemes.items") ? titleTranslation : s.name;
+
+                  return (
+                    <tr key={s.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="p-4 max-w-sm">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-base">{s.icon || "✨"}</span>
+                          <div>
+                            <strong className="text-slate-900 block font-bold">{displayTitle}</strong>
+                            <span className="text-[10px] text-slate-400 font-mono">{s.id}</span>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold text-[10px]">
-                        {s.code}
-                      </span>
-                    </td>
-                    <td className="p-4 font-bold text-slate-700">
-                      {s.targetStateCode || "ALL"}
-                    </td>
-                    <td className="p-4 font-extrabold text-slate-900">
-                      ₹ {s.maxCost.toLocaleString("en-IN")}
-                    </td>
-                    <td className="p-4 font-bold text-emerald-700">{s.govtSharePercent}%</td>
-                    <td className="p-4 font-extrabold text-gov-saffron">{s.interestFemale}%</td>
-                    <td className="p-4 font-bold text-slate-700">
-                      {s.interestMale > 50 ? "N/A" : `${s.interestMale}%`}
-                    </td>
-                    <td className="p-4">{s.moratoriumMonths} Mos</td>
-                    <td className="p-4">
-                      <Link
-                        href={`/apply?scheme=${s.id}`}
-                        className="bg-[#002147] hover:bg-[#001529] text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center space-x-1 transition-all"
-                      >
-                        <span>Apply</span>
-                        <ArrowRight className="w-3 h-3" />
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="p-4">
+                        <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold text-[10px]">
+                          {s.code}
+                        </span>
+                      </td>
+                      <td className="p-4 font-bold text-slate-700">
+                        {s.targetStateCode || "ALL"}
+                      </td>
+                      <td className="p-4 font-extrabold text-slate-900">
+                        ₹ {s.maxCost.toLocaleString("en-IN")}
+                      </td>
+                      <td className="p-4 font-bold text-emerald-700">{s.govtSharePercent}%</td>
+                      <td className="p-4 font-extrabold text-gov-saffron">{s.interestFemale}%</td>
+                      <td className="p-4 font-bold text-slate-700">
+                        {s.interestMale > 50 ? t("schemes.femaleOnly") : `${s.interestMale}%`}
+                      </td>
+                      <td className="p-4">{s.moratoriumMonths} {t("schemes.mos")}</td>
+                      <td className="p-4">
+                        <Link
+                          href={`/apply?scheme=${s.id}`}
+                          className="bg-[#002147] hover:bg-[#001529] text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center space-x-1 transition-all cursor-pointer"
+                        >
+                          <span>{t("schemes.apply")}</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -498,10 +517,10 @@ export default function SchemesPage() {
           <button
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             disabled={currentPage === 1}
-            className="px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1"
+            className="px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
-            <span>Previous</span>
+            <span>{t("schemes.previous")}</span>
           </button>
 
           <div className="flex items-center space-x-1">
@@ -519,7 +538,7 @@ export default function SchemesPage() {
                 <button
                   key={pageNumber}
                   onClick={() => setCurrentPage(pageNumber)}
-                  className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                  className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     currentPage === pageNumber
                       ? "bg-[#002147] text-white shadow-sm"
                       : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
@@ -534,9 +553,9 @@ export default function SchemesPage() {
           <button
             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1"
+            className="px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer"
           >
-            <span>Next</span>
+            <span>{t("schemes.next")}</span>
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>

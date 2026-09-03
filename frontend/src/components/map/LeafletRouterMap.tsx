@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { BranchRoute } from "@/lib/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface LeafletRouterMapProps {
   branches: BranchRoute[];
@@ -18,6 +19,7 @@ export const LeafletRouterMap: React.FC<LeafletRouterMapProps> = ({
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined" || !mapContainerRef.current) return;
@@ -55,12 +57,14 @@ export const LeafletRouterMap: React.FC<LeafletRouterMapProps> = ({
       });
 
       // Render Applicant Home Location Circle
+      const appLocTitle = t("map.applicantLocation") || "Applicant Center Location";
+      const appSearchCenter = t("map.spatialSearchCenter") || "Spatial Search Center";
       L.circle([applicantLat, applicantLon], {
         color: "#001529",
         fillColor: "#FF9933",
         fillOpacity: 0.35,
         radius: 8000
-      }).addTo(map).bindPopup("<b>Applicant Center Location</b><br/>Spatial Search Center");
+      }).addTo(map).bindPopup(`<b>${appLocTitle}</b><br/>${appSearchCenter}`);
 
       // Color-coded Pin Factory
       const createCustomIcon = (status: string, score: number) => {
@@ -95,20 +99,28 @@ export const LeafletRouterMap: React.FC<LeafletRouterMapProps> = ({
         const marker = L.marker([markerLat, markerLon], { icon: markerIcon }).addTo(map);
 
         const addressText = b.address || `${b.branch_name}, ${b.district || "District Office"}, ${b.state_code}`;
+        const distLabel = t("map.distance") || "Distance:";
+        const kmLabel = t("map.kmAway") || "KM away";
+        const quotaLabel = t("map.creditQuota") || "Available Quota:";
+        const npaLabel = t("map.npaRate") || "Branch NPA:";
+        const rScoreLabel = t("map.rScore") || "R_score:";
+        const statusLabel = t("map.status") || "Status:";
+        const addrLabel = t("map.detailedAddress") || "📍 Detailed Address:";
+
         const popupContent = `
           <div style="font-family: sans-serif; padding: 4px; max-width: 250px;">
             <div style="font-size: 11px; font-weight: bold; color: #001529; text-transform: uppercase;">${b.partner_type} - ${b.partner_name}</div>
             <div style="font-size: 12px; font-weight: bold; color: #1e293b; margin-top: 2px;">${b.branch_name}</div>
             <div style="font-size: 10px; color: #0f172a; background: #f8fafc; padding: 5px 7px; border-radius: 6px; margin: 5px 0; border: 1px solid #cbd5e1; line-height: 1.35;">
-              <strong style="color: #002147;">📍 Detailed Address:</strong><br/>${addressText}
+              <strong style="color: #002147;">${addrLabel}</strong><br/>${addressText}
             </div>
             <hr style="margin: 6px 0; border: 0; border-top: 1px solid #e2e8f0;" />
             <div style="font-size: 11px; color: #475569;">
-              <div>• Distance: <strong>${b.distance_km} KM</strong></div>
-              <div>• Available Quota: <strong>₹ ${(b.remaining_quota / 100000).toFixed(2)} Lakhs</strong></div>
-              <div>• Branch NPA: <strong>${npaVal}%</strong></div>
-              <div>• Composite R_score: <strong>${b.r_score}</strong></div>
-              <div>• Status: <strong style="color: ${b.pin_status === 'GREEN' ? '#059669' : b.pin_status === 'YELLOW' ? '#d97706' : '#dc2626'}">${b.pin_status}</strong></div>
+              <div>• ${distLabel} <strong>${b.distance_km} ${kmLabel}</strong></div>
+              <div>• ${quotaLabel} <strong>₹ ${(b.remaining_quota / 100000).toFixed(2)} Lakhs</strong></div>
+              <div>• ${npaLabel} <strong>${npaVal}%</strong></div>
+              <div>• ${rScoreLabel} <strong>${b.r_score}</strong></div>
+              <div>• ${statusLabel} <strong style="color: ${b.pin_status === 'GREEN' ? '#059669' : b.pin_status === 'YELLOW' ? '#d97706' : '#dc2626'}">${b.pin_status}</strong></div>
             </div>
           </div>
         `;
@@ -127,7 +139,7 @@ export const LeafletRouterMap: React.FC<LeafletRouterMapProps> = ({
         }
       }
     });
-  }, [branches, applicantLat, applicantLon, onSelectBranch]);
+  }, [branches, applicantLat, applicantLon, onSelectBranch, t]);
 
   return (
     <div className="w-full h-[480px] rounded-2xl overflow-hidden border-2 border-slate-300 shadow-md relative">
@@ -136,19 +148,19 @@ export const LeafletRouterMap: React.FC<LeafletRouterMapProps> = ({
       {/* Map Legend Overlay */}
       <div className="absolute bottom-4 left-4 bg-slate-900/90 text-white backdrop-blur-md p-3 rounded-xl border border-white/20 z-20 text-[11px] space-y-1 shadow-xl">
         <div className="font-extrabold text-gov-gold uppercase text-[10px] tracking-wider mb-1">
-          R_score Pin Index Legend
+          {t("map.legendTitle") || "R_score Pin Index Legend"}
         </div>
         <div className="flex items-center space-x-2">
           <span className="w-3 h-3 bg-emerald-500 rounded-full inline-block border border-white"></span>
-          <span>Green: Top Route (R_score &ge; 0.70)</span>
+          <span>{t("map.legendGreen") || "Green: Top Route (R_score ≥ 0.70)"}</span>
         </div>
         <div className="flex items-center space-x-2">
           <span className="w-3 h-3 bg-amber-500 rounded-full inline-block border border-white"></span>
-          <span>Yellow: Valid Alternative (0.50 &le; R_score &lt; 0.70)</span>
+          <span>{t("map.legendYellow") || "Yellow: Valid Alternative (0.50 ≤ R_score < 0.70)"}</span>
         </div>
         <div className="flex items-center space-x-2">
           <span className="w-3 h-3 bg-red-600 rounded-full inline-block border border-white"></span>
-          <span>Red: Pruned / Quota Exhausted / NPA &ge; 15%</span>
+          <span>{t("map.legendRed") || "Red: High NPA / Pruned Route"}</span>
         </div>
       </div>
     </div>

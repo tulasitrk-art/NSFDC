@@ -96,22 +96,22 @@ export const PanIndiaBranchMap: React.FC<PanIndiaBranchMapProps> = ({
           <div className="flex items-center space-x-2">
             <Navigation className="w-5 h-5 text-gov-saffron" />
             <h3 className="text-base sm:text-lg font-black text-white">
-              Pan-India Channel Partner Bank & SCA Spatial Router
+              {t("map.routerTitle")}
             </h3>
           </div>
           <p className="text-xs text-slate-300 font-medium">
-            Select any Indian State or UT to view interactive map pins and detailed branch credit metrics.
+            {t("map.routerSubtitle")}
           </p>
         </div>
 
         <div className="flex items-center space-x-2 w-full sm:w-auto">
-          <span className="text-xs font-bold text-gov-gold whitespace-nowrap hidden md:inline">Select State:</span>
+          <span className="text-xs font-bold text-gov-gold whitespace-nowrap hidden md:inline">{t("map.selectState")}</span>
           <select
             value={selectedState}
             onChange={(e) => handleStateSelect(e.target.value)}
             className="w-full sm:w-auto bg-gov-saffron text-slate-950 font-black px-4 py-2.5 rounded-xl border-2 border-amber-300 shadow-md text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
           >
-            <option value="ALL">All 28 States & UTs (Pan-India)</option>
+            <option value="ALL">{t("map.allStates") || "All 28 States & UTs (Pan-India)"}</option>
             {INDIAN_STATES.map((s) => (
               <option key={s.code} value={s.code}>
                 {s.name} ({s.code})
@@ -129,16 +129,16 @@ export const PanIndiaBranchMap: React.FC<PanIndiaBranchMapProps> = ({
           <div className="flex justify-between items-center text-xs font-extrabold text-[#002147] uppercase tracking-wider">
             <span className="flex items-center space-x-1.5">
               <MapPin className="w-4 h-4 text-gov-saffron" />
-              <span>Interactive OpenStreetMap Visualizer</span>
+              <span>{t("map.osmTitle")}</span>
             </span>
-            <span className="text-slate-500 font-semibold">State Code: {selectedState}</span>
+            <span className="text-slate-500 font-semibold">{t("map.stateCode")} {selectedState}</span>
           </div>
 
           <div className="relative w-full rounded-2xl overflow-hidden border-2 border-slate-200 shadow-md">
             {loading && (
               <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-30 flex items-center justify-center text-white font-bold text-xs space-x-2 rounded-2xl">
                 <span className="w-5 h-5 border-2 border-gov-saffron border-t-transparent rounded-full animate-spin"></span>
-                <span>Updating Map Pins for {selectedState}...</span>
+                <span>{t("map.updatingPins")} {selectedState}...</span>
               </div>
             )}
 
@@ -156,10 +156,10 @@ export const PanIndiaBranchMap: React.FC<PanIndiaBranchMapProps> = ({
           <div className="flex justify-between items-center text-xs font-black text-[#002147] uppercase tracking-wider border-b border-slate-200 pb-2">
             <span className="flex items-center space-x-1">
               <Building2 className="w-4 h-4 text-gov-navy" />
-              <span>Branches in Selected State</span>
+              <span>{t("map.branchesInState")}</span>
             </span>
             <span className="bg-gov-saffron text-slate-950 px-2.5 py-0.5 rounded-full font-black text-[11px] shadow-sm">
-              {activeBranches.length} Branch Desks
+              {activeBranches.length} {t("map.branchDesks")}
             </span>
           </div>
 
@@ -201,7 +201,7 @@ export const PanIndiaBranchMap: React.FC<PanIndiaBranchMapProps> = ({
                           ? "bg-emerald-600 text-white border-emerald-400"
                           : "bg-amber-500 text-slate-950 border-amber-300"
                       }`}>
-                        R_score: {b.r_score}
+                        {t("map.rScore") || "R_score:"} {b.r_score}
                       </span>
                     </div>
 
@@ -221,7 +221,7 @@ export const PanIndiaBranchMap: React.FC<PanIndiaBranchMapProps> = ({
                         <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isSelected ? "text-amber-700" : "text-gov-saffron"}`} />
                         <div>
                           <span className={`text-[10px] font-black uppercase block tracking-wider ${isSelected ? "text-amber-900" : "text-slate-500"}`}>
-                            {isSelected ? "📍 Selected Branch Detailed Address:" : "Physical Branch Address:"}
+                            {isSelected ? t("map.selectedAddress") : t("map.physicalAddress")}
                           </span>
                           <p className="font-bold text-xs leading-snug text-slate-900">
                             {b.address || `${b.branch_name}, ${b.district || "District Office"}, ${b.state_code}`}
@@ -233,11 +233,11 @@ export const PanIndiaBranchMap: React.FC<PanIndiaBranchMapProps> = ({
                     {/* Key Metrics Grid */}
                     <div className="grid grid-cols-2 gap-2 text-xs bg-white p-3 rounded-xl border border-slate-200">
                       <div>
-                        <span className="text-[10px] text-slate-400 font-bold uppercase block">Branch NPA Rate</span>
-                        <strong className="text-emerald-700 font-extrabold">{npaVal}% (Healthy &lt;15%)</strong>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase block">{t("map.npaRate")}</span>
+                        <strong className="text-emerald-700 font-extrabold">{npaVal}% {t("map.healthyNpa")}</strong>
                       </div>
                       <div>
-                        <span className="text-[10px] text-slate-400 font-bold uppercase block">Available Credit Quota</span>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase block">{t("map.creditQuota")}</span>
                         <strong className="text-slate-900 font-extrabold">₹ {quotaVal.toLocaleString()}</strong>
                       </div>
                     </div>
@@ -247,7 +247,7 @@ export const PanIndiaBranchMap: React.FC<PanIndiaBranchMapProps> = ({
                       <div className="flex items-center justify-between text-xs text-slate-600 font-semibold pt-1 border-t border-slate-100">
                         <div className="flex items-center space-x-1">
                           <Phone className="w-3.5 h-3.5 text-gov-saffron" />
-                          <span>Officer: <strong>{b.officer_contact}</strong></span>
+                          <span>{t("map.officer")} <strong>{b.officer_contact}</strong></span>
                         </div>
                       </div>
                     )}
@@ -259,21 +259,21 @@ export const PanIndiaBranchMap: React.FC<PanIndiaBranchMapProps> = ({
                         e.stopPropagation();
                         handleCardClick(b);
                       }}
-                      className={`w-full py-2.5 px-4 rounded-xl text-xs font-black flex items-center justify-center space-x-2 transition-all ${
+                      className={`w-full py-2.5 px-4 rounded-xl text-xs font-black flex items-center justify-center space-x-2 transition-all cursor-pointer ${
                         isSelected
                           ? "bg-gov-saffron text-slate-950 shadow"
                           : "bg-[#002147] hover:bg-slate-800 text-white"
                       }`}
                     >
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>{isSelected ? "Selected Branch for Dispatch ✓" : "Select Branch for Dispatch →"}</span>
+                      <span>{isSelected ? t("map.selectedForDispatch") : t("map.selectForDispatch")}</span>
                     </button>
                   </div>
                 );
               })
             ) : (
               <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-xs font-bold text-slate-500">
-                No active branch desks found for state code: {selectedState}. Select another state or "All Pan-India".
+                {t("map.noBranches")} {selectedState}. {t("map.noBranchesPrompt")}
               </div>
             )}
           </div>

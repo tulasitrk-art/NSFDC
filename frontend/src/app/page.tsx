@@ -337,51 +337,60 @@ export default function HomePage() {
 
         {/* Scheme Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SCHEMES_LIST.map((scheme) => (
-            <div
-              key={scheme.id}
-              className="bg-white p-6 rounded-2xl border-2 border-slate-200 hover:border-[#002147] shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4"
-            >
-              <div className="space-y-3">
-                <div className="flex justify-between items-start">
-                  <span className="bg-slate-100 text-[#002147] text-[10px] font-black uppercase px-2.5 py-1 rounded-md border border-slate-300">
-                    {scheme.id}
-                  </span>
-                  <span className="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2.5 py-1 rounded-full border border-emerald-300">
-                    {scheme.rate} Interest
-                  </span>
+          {SCHEMES_LIST.map((scheme) => {
+            const localizedTitleKey = `schemes.items.${scheme.id}.title`;
+            const localizedDescKey = `schemes.items.${scheme.id}.description`;
+            const titleTranslation = t(localizedTitleKey);
+            const descTranslation = t(localizedDescKey);
+            const displayTitle = titleTranslation && !titleTranslation.startsWith("schemes.items") ? titleTranslation : scheme.title;
+            const displayDesc = descTranslation && !descTranslation.startsWith("schemes.items") ? descTranslation : scheme.description;
+
+            return (
+              <div
+                key={scheme.id}
+                className="bg-white p-6 rounded-2xl border-2 border-slate-200 hover:border-[#002147] shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+              >
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start">
+                    <span className="bg-slate-100 text-[#002147] text-[10px] font-black uppercase px-2.5 py-1 rounded-md border border-slate-300">
+                      {scheme.id}
+                    </span>
+                    <span className="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2.5 py-1 rounded-full border border-emerald-300">
+                      {scheme.rate} {t("schemes.interest") || "Interest"}
+                    </span>
+                  </div>
+
+                  <h3 className="text-base font-extrabold text-[#002147] leading-snug">
+                    {displayTitle}
+                  </h3>
+
+                  <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                    {displayDesc}
+                  </p>
                 </div>
 
-                <h3 className="text-base font-extrabold text-[#002147] leading-snug">
-                  {scheme.title}
-                </h3>
-
-                <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                  {scheme.description}
-                </p>
-              </div>
-
-              <div className="space-y-3 pt-3 border-t border-slate-100">
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Govt. Funding</span>
-                    <strong className="text-slate-900 font-extrabold">{scheme.govtShare}</strong>
+                <div className="space-y-3 pt-3 border-t border-slate-100">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-[10px] text-slate-500 uppercase font-bold block">{t("schemes.govtFundingLabel") || "Govt. Funding"}</span>
+                      <strong className="text-slate-900 font-extrabold">{scheme.govtShare}</strong>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-500 uppercase font-bold block">{t("schemes.maxProjectLimit") || "Max Project Limit"}</span>
+                      <strong className="text-slate-900 font-extrabold">{scheme.maxCost}</strong>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Max Project Limit</span>
-                    <strong className="text-slate-900 font-extrabold">{scheme.maxCost}</strong>
-                  </div>
+
+                  <Link
+                    href={`/apply?scheme=${scheme.id}`}
+                    className="w-full bg-[#002147] hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 shadow transition-transform transform active:scale-95 cursor-pointer"
+                  >
+                    <span>{t("home.applyAndCalculate")} →</span>
+                  </Link>
                 </div>
-
-                <Link
-                  href={`/apply?scheme=${scheme.id}`}
-                  className="w-full bg-[#002147] hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 shadow transition-transform transform active:scale-95"
-                >
-                  <span>{t("home.applyAndCalculate")} →</span>
-                </Link>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
