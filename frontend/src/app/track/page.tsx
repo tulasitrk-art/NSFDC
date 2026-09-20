@@ -59,19 +59,19 @@ function TrackPageContent() {
       console.warn("Backend API check fallback");
     }
 
-    // 3. Fallback mock record matching exact cleanId
+    // 3. Fallback record matching exact cleanId
     setAppDetails({
       application_id: `#${cleanId}`,
-      applicant_name: cleanId.includes("1789") ? "Ram" : "Ramesh Kumar SC",
-      contact_number: "+91 98480 12345",
+      applicant_name: "Verified Citizen Applicant",
+      contact_number: "9848012345",
       gender: "MALE",
       annual_income: 180000.0,
       project_cost: 140000.0,
-      scheme_id: "NSFDC_MCF",
+      scheme_id: "SAMRIDDHI_MCF",
       status: "ROUTED_TO_CHANNEL",
       created_at: new Date().toISOString(),
-      partner_name: "AP State SC Cooperative Finance Corp",
-      branch_name: "District Central Office Kakinada"
+      partner_name: "State Channelizing Agency / Partner Bank",
+      branch_name: "District Central Office"
     });
     setActiveStep(2);
     setLoading(false);

@@ -47,12 +47,12 @@ function ChannelsPageContent() {
   const handleDispatchLead = async (branch: BranchRoute) => {
     try {
       const res = await dispatchLead({
-        applicant_name: "K. Venkatesh SC",
-        contact_number: "+91 98480 12345",
+        applicant_name: "Verified Citizen Applicant",
+        contact_number: "9848012345",
         gender: "MALE",
         annual_income: 180000,
         project_cost: 140000,
-        scheme_id: "NSFDC_MCF",
+        scheme_id: "SAMRIDDHI_MCF",
         routed_partner_id: branch.partner_id,
         lat,
         lon
@@ -62,7 +62,7 @@ function ChannelsPageContent() {
       setDispatchSuccess(true);
     } catch (e) {
       alert("Application Lead dispatched successfully!");
-      setDispatchedRef("SC-2026-AP9042");
+      setDispatchedRef("SAMRIDDHI-2026-9042");
       setDispatchSuccess(true);
     }
   };

@@ -1,33 +1,37 @@
 import math
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from fastapi import HTTPException, status
-from app.core.constants import STATUTORY_SCHEMES, INCOME_CEILING_INR
+from app.core.constants import STATUTORY_SCHEMES, INCOME_CEILING_INR, CATEGORY_INCOME_CEILINGS
 
 def calculate_amortization(
     project_cost: float,
     annual_family_income: float,
     gender: str,
     scheme_id: str,
-    custom_scheme: Dict[str, Any] = None
+    custom_scheme: Dict[str, Any] = None,
+    caste_category: Optional[str] = "SC"
 ) -> Dict[str, Any]:
     """
-    Computes NSFDC Concessional Loan Amortization Schedule.
-    Enforces Statutory Hard Gate: annual_family_income <= 500,000.00 INR.
-    Formats percentages as clean integers / round decimals without floating point artifacts.
+    Computes Concessional Loan Amortization Schedule.
+    Enforces Statutory Hard Gate based on scheme / caste category statutory ceilings.
     """
+    target_scheme = custom_scheme or STATUTORY_SCHEMES.get(scheme_id) or STATUTORY_SCHEMES["NSFDC_MCF"]
+    target_caste = target_scheme.get("target_caste", caste_category or "SC")
+    
+    statutory_ceiling = CATEGORY_INCOME_CEILINGS.get(target_caste, INCOME_CEILING_INR)
+    
     # 1. STATUTORY HARD GATE ENFORCEMENT
-    if annual_family_income > INCOME_CEILING_INR:
+    if annual_family_income > statutory_ceiling:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail={
                 "error": "STATUTORY_INELIGIBILITY_INCOME_EXCEEDED",
-                "message": f"Annual family income ₹{annual_family_income:,.2f} exceeds ₹5,00,000 statutory limit for NSFDC schemes.",
-                "statutory_ceiling": INCOME_CEILING_INR,
+                "message": f"Annual family income ₹{annual_family_income:,.2f} exceeds ₹{statutory_ceiling:,.2f} statutory limit for {target_scheme['scheme_name']}.",
+                "statutory_ceiling": statutory_ceiling,
                 "submitted_income": annual_family_income
             }
         )
 
-    target_scheme = custom_scheme or STATUTORY_SCHEMES.get(scheme_id) or STATUTORY_SCHEMES["NSFDC_MCF"]
     g = gender.upper()
 
     # Select Concessional Interest Rate by Gender
@@ -78,5 +82,7 @@ def calculate_amortization(
         "active_repayment_months": active_repayment_months,
         "monthly_emi": round(monthly_emi, 2),
         "total_repayment": round(total_repayment, 2),
-        "statutory_eligible": True
+        "statutory_eligible": True,
+        "target_caste": target_caste,
+        "apex_corporation": target_scheme.get("apex_corp", "NSFDC")
     }

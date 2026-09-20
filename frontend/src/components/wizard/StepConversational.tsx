@@ -163,8 +163,8 @@ export const StepConversational: React.FC<StepConversationalProps> = ({ mode, on
   const [currentStep, setCurrentStep] = useState(0); // 0 = Identity, 1-6 = Questions
 
   // Basic Identity
-  const [applicantName, setApplicantName] = useState("Ramesh Kumar SC");
-  const [contactNumber, setContactNumber] = useState("+91 98480 12345");
+  const [applicantName, setApplicantName] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
 
   // Intake Answers
   const [gender, setGender] = useState<"FEMALE" | "MALE" | "TRANSGENDER">("FEMALE");
@@ -471,24 +471,33 @@ export const StepConversational: React.FC<StepConversationalProps> = ({ mode, on
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div>
-              <label className="text-xs font-bold text-slate-700 block mb-1">{t("apply.fullName")}</label>
+              <label className="text-xs font-bold text-slate-700 block mb-1">{t("apply.fullName") || "Full Legal Name"}</label>
               <input
                 type="text"
                 value={applicantName}
                 onChange={(e) => setApplicantName(e.target.value)}
                 className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl p-3 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-gov-navy focus:outline-none"
-                placeholder="e.g. Ramesh Kumar SC"
+                placeholder="Enter your full legal name as per official records"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-700 block mb-1">{t("apply.contactNumber")}</label>
+              <div className="flex justify-between items-center mb-1">
+                <label className="text-xs font-bold text-slate-700">{t("apply.contactNumber") || "Mobile Number"}</label>
+                <span className={`text-[10px] font-extrabold ${contactNumber.length === 10 ? "text-emerald-700" : "text-slate-400"}`}>
+                  {contactNumber.length}/10 {contactNumber.length === 10 ? "✓" : "digits"}
+                </span>
+              </div>
               <input
-                type="text"
+                type="tel"
+                maxLength={10}
                 value={contactNumber}
-                onChange={(e) => setContactNumber(e.target.value)}
-                className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl p-3 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-gov-navy focus:outline-none"
-                placeholder="e.g. +91 98480 12345"
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  setContactNumber(val);
+                }}
+                className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl p-3 text-xs font-bold font-mono text-slate-900 focus:ring-2 focus:ring-gov-navy focus:outline-none"
+                placeholder="Enter 10-digit mobile number"
               />
             </div>
           </div>

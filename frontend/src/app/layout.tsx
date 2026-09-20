@@ -16,8 +16,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="font-md">
       <head>
-        <title>NSFDC Concessional Loan Digital Portal | Govt. of India</title>
-        <meta name="description" content="National Scheduled Castes Finance & Development Corporation Concessional Credit Portal under Ministry of Social Justice & Empowerment." />
+        <title>SAMRIDDHI – National Unified Concessional Credit &amp; Welfare Portal | Govt. of India</title>
+        <meta name="description" content="SAMRIDDHI National Unified Concessional Credit &amp; Welfare Portal under Ministry of Social Justice &amp; Empowerment, Government of India (NSFDC, NSTFDC, NBCFDC, NMDFC, NHFDC)." />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

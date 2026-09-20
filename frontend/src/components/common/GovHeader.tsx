@@ -46,13 +46,13 @@ export const GovHeader: React.FC = () => {
 
           <div className="flex flex-col">
             <h1 className="text-base sm:text-lg font-bold text-[#002147] tracking-tight leading-snug">
-              राष्ट्रीय अनुसूचित जाति वित्त एवं विकास निगम
+              समृद्धि – राष्ट्रीय रियायती ऋण एवं जनकल्याण पोर्टल
             </h1>
             <h2 className="text-sm sm:text-base font-bold text-[#002147] tracking-tight">
-              National Scheduled Castes Finance & Development Corporation
+              SAMRIDDHI – National Unified Concessional Credit & Welfare Portal
             </h2>
             <p className="text-xs text-slate-500 font-medium">
-              (Ministry of Social Justice & Empowerment, Govt. of India)
+              (Central Apex Corporations & Ministries, Govt. of India)
             </p>
           </div>
         </Link>
@@ -63,7 +63,7 @@ export const GovHeader: React.FC = () => {
             ☎
           </div>
           <div>
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">NSFDC Toll-Free Helpline</div>
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">SAMRIDDHI National Toll-Free Helpline</div>
             <div className="text-sm font-extrabold text-slate-900">1800-11-0380 / 1800-11-0381</div>
           </div>
         </div>

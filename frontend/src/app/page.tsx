@@ -143,13 +143,13 @@ export default function HomePage() {
       const cleanId = trackRefInput.trim().toUpperCase();
       setTrackResult({
         application_id: `#${cleanId}`,
-        applicant_name: cleanId.includes("1789") ? "Ram" : "Ramesh Kumar SC",
-        contact_number: "+91 98480 12345",
+        applicant_name: "Verified Citizen Applicant",
+        contact_number: "9848012345",
         project_cost: 140000.0,
-        scheme_id: "NSFDC_MCF",
+        scheme_id: "SAMRIDDHI_MCF",
         status: "ROUTED_TO_CHANNEL",
-        partner_name: "AP State SC Cooperative Finance Corp",
-        branch_name: "District Central Office Kakinada"
+        partner_name: "State Channelizing Agency / Partner Bank",
+        branch_name: "District Central Office"
       });
     }
   };

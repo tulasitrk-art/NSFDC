@@ -37,6 +37,7 @@ import {
   extractNumberFromSpeech,
   VOICE_LOCALE_MAP,
 } from "@/lib/voice_utils";
+import { ALL_CASTE_CATEGORIES, getCasteCategoryById } from "@/lib/caste_categories";
 import { FormalApplicationModal, FormalApplicationData } from "@/components/common/FormalApplicationModal";
 
 export interface CitizenIntakeData {
@@ -54,6 +55,7 @@ export interface CitizenIntakeData {
   address: string;
   pinCode: string;
   isScheduledCaste: boolean;
+  casteCategory: string;
   qualification: string;
   qualificationOther: string;
   annualIncome: number;
@@ -93,7 +95,8 @@ export const StepCitizenIntakeForm: React.FC<StepCitizenIntakeFormProps> = ({
     longitude: initialData?.longitude || 82.238,
     address: initialData?.address || "",
     pinCode: initialData?.pinCode || "",
-    isScheduledCaste: initialData?.isScheduledCaste !== undefined ? initialData.isScheduledCaste : true,
+    isScheduledCaste: initialData?.casteCategory ? initialData.casteCategory === "SC" : (initialData?.isScheduledCaste !== undefined ? initialData.isScheduledCaste : true),
+    casteCategory: initialData?.casteCategory || "SC",
     qualification: initialData?.qualification || "GRADUATE",
     qualificationOther: initialData?.qualificationOther || "",
     annualIncome: initialData?.annualIncome || 180000,
@@ -303,32 +306,43 @@ export const StepCitizenIntakeForm: React.FC<StepCitizenIntakeFormProps> = ({
         }
         break;
 
-      case 6: // SC Caste (Yes/No)
-        if (
-          lower.includes("yes") ||
-          lower.includes("हाँ") ||
-          lower.includes("अవును") ||
-          lower.includes("ஆம்") ||
-          lower.includes("ಹೌದು") ||
-          lower.includes("होय") ||
-          lower.includes("हो") ||
-          lower.includes("হ্যাঁ") ||
-          lower.includes("হ্যা") ||
-          lower.includes("હા")
-        ) {
-          setFormData((prev) => ({ ...prev, isScheduledCaste: true }));
-        } else if (
-          lower.includes("no") ||
-          lower.includes("नहीं") ||
-          lower.includes("కాదు") ||
-          lower.includes("இல்லை") ||
-          lower.includes("ಇಲ್ಲ") ||
-          lower.includes("नाही") ||
-          lower.includes("না") ||
-          lower.includes("ના") ||
-          lower.includes("નથી")
-        ) {
-          setFormData((prev) => ({ ...prev, isScheduledCaste: false }));
+      case 6: // Caste / Social Category
+        if (lower.includes("scheduled tribe") || lower.includes("st") || lower.includes("adivasi") || lower.includes("గిరిజన") || lower.includes("जनजाति")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "ST", isScheduledCaste: false }));
+        } else if (lower.includes("non creamy") || lower.includes("obc ncl") || lower.includes("ncl")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "OBC_NCL", isScheduledCaste: false }));
+        } else if (lower.includes("creamy layer") || lower.includes("obc cl")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "OBC_CL", isScheduledCaste: false }));
+        } else if (lower.includes("obc") || lower.includes("backward class") || lower.includes("వెనుకబడిన") || lower.includes("पिछड़ा")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "OBC", isScheduledCaste: false }));
+        } else if (lower.includes("ews") || lower.includes("economically weaker")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "EWS", isScheduledCaste: false }));
+        } else if (lower.includes("ebc")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "EBC", isScheduledCaste: false }));
+        } else if (lower.includes("general") || lower.includes("open category") || lower.includes("oc") || lower.includes("ur") || lower.includes("unreserved")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "GEN", isScheduledCaste: false }));
+        } else if (lower.includes("pwd") || lower.includes("disability") || lower.includes("divyang") || lower.includes("దివ్యాంగ") || lower.includes("विकलांग")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "PWD", isScheduledCaste: false }));
+        } else if (lower.includes("muslim") || lower.includes("mus")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "MIN_MUS", isScheduledCaste: false }));
+        } else if (lower.includes("christian") || lower.includes("chr")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "MIN_CHR", isScheduledCaste: false }));
+        } else if (lower.includes("sikh") || lower.includes("sik")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "MIN_SIK", isScheduledCaste: false }));
+        } else if (lower.includes("buddhist") || lower.includes("bud")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "MIN_BUD", isScheduledCaste: false }));
+        } else if (lower.includes("jain") || lower.includes("jai")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "MIN_JAI", isScheduledCaste: false }));
+        } else if (lower.includes("parsi") || lower.includes("par")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "MIN_PAR", isScheduledCaste: false }));
+        } else if (lower.includes("dnt") || lower.includes("denotified")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "DNT", isScheduledCaste: false }));
+        } else if (lower.includes("nt") || lower.includes("nomadic")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "NT", isScheduledCaste: false }));
+        } else if (lower.includes("snt") || lower.includes("semi nomadic")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "SNT", isScheduledCaste: false }));
+        } else if (lower.includes("sc") || lower.includes("scheduled caste") || lower.includes("హరిజన") || lower.includes("अनुसूचित जाति")) {
+          setFormData((prev) => ({ ...prev, casteCategory: "SC", isScheduledCaste: true }));
         }
         break;
 
@@ -411,19 +425,25 @@ export const StepCitizenIntakeForm: React.FC<StepCitizenIntakeFormProps> = ({
   // Validation and Step 2 Submission
   const handleProceed = () => {
     if (!formData.applicantName.trim()) {
-      setValidationError("Please enter applicant full name.");
+      setValidationError("Please enter applicant full legal name.");
       return;
     }
     if (!formData.contactNumber.trim()) {
       setValidationError("Please enter contact mobile number.");
       return;
     }
+    if (!/^\d{10}$/.test(formData.contactNumber.trim())) {
+      setValidationError("Mobile number must be exactly 10 digits (e.g. 9876543210).");
+      return;
+    }
     if (!formData.stateCode || !formData.district) {
       setValidationError("Please select your State and District.");
       return;
     }
-    if (formData.annualIncome > 500000) {
-      setValidationError("Annual family income exceeds the ₹ 5,00,000 statutory limit for NSFDC schemes.");
+    const catObj = getCasteCategoryById(formData.casteCategory);
+    const ceiling = catObj.incomeCeiling || 500000;
+    if (formData.annualIncome > ceiling) {
+      setValidationError(`Annual family income exceeds the ₹ ${ceiling.toLocaleString()} statutory limit for ${catObj.label}.`);
       return;
     }
     if (formData.projectCost <= 0) {
@@ -435,26 +455,27 @@ export const StepCitizenIntakeForm: React.FC<StepCitizenIntakeFormProps> = ({
 
     // Save draft in localStorage
     if (typeof window !== "undefined") {
-      localStorage.setItem("nsfdc_draft_application", JSON.stringify(formData));
+      localStorage.setItem("samriddhi_draft_application", JSON.stringify(formData));
     }
 
     onComplete(formData);
   };
 
   // Estimated Government Share and Beneficiary Margin
-  const govtSharePct = formData.gender === "FEMALE" && formData.projectCost <= 140000 ? 95 : 90;
+  const selectedCat = getCasteCategoryById(formData.casteCategory);
+  const govtSharePct = formData.gender === "FEMALE" && formData.projectCost <= 140000 ? 95 : (selectedCat.maxGovtShare || 90);
   const estimatedGovtLoan = Math.round((formData.projectCost * govtSharePct) / 100);
   const estimatedMargin = formData.projectCost - estimatedGovtLoan;
 
   // Formal application data object for preview
   const formalAppData: FormalApplicationData = {
-    applicationId: `SC-2026-${formData.stateCode}${Math.floor(1000 + Math.random() * 9000)}`,
+    applicationId: `APP-2026-${formData.stateCode}${Math.floor(1000 + Math.random() * 9000)}`,
     applicantName: formData.applicantName,
     contactNumber: formData.contactNumber,
     gender: formData.gender,
     dateOfBirth: formData.dateOfBirth,
     age: formData.age,
-    isScheduledCaste: formData.isScheduledCaste,
+    isScheduledCaste: formData.casteCategory === "SC",
     stateCode: formData.stateCode,
     stateName: formData.stateName,
     district: formData.district,
@@ -637,21 +658,34 @@ export const StepCitizenIntakeForm: React.FC<StepCitizenIntakeFormProps> = ({
                 type="text"
                 value={formData.applicantName}
                 onChange={(e) => setFormData({ ...formData, applicantName: e.target.value })}
-                placeholder={t("intake.namePlaceholder") || "e.g. Rajesh Kumar SC"}
+                placeholder={t("intake.namePlaceholder") || "Enter your full legal name as per official records"}
                 className="w-full px-4 py-3 rounded-xl border border-slate-300 text-xs sm:text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#002147] focus:outline-none"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-black text-slate-700 flex items-center space-x-1.5">
-                <Phone className="w-3.5 h-3.5 text-blue-600" />
-                <span>{t("intake.phoneLabel") || "Mobile / Contact Number"} *</span>
-              </label>
+              <div className="flex justify-between items-center">
+                <label className="text-xs font-black text-slate-700 flex items-center space-x-1.5">
+                  <Phone className="w-3.5 h-3.5 text-blue-600" />
+                  <span>{t("intake.phoneLabel") || "Mobile / Contact Number"} *</span>
+                </label>
+                <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded ${
+                  formData.contactNumber.length === 10
+                    ? "bg-emerald-100 text-emerald-800"
+                    : "bg-slate-100 text-slate-500"
+                }`}>
+                  {formData.contactNumber.length}/10 {formData.contactNumber.length === 10 ? "✓ Valid" : "Digits"}
+                </span>
+              </div>
               <input
                 type="tel"
+                maxLength={10}
                 value={formData.contactNumber}
-                onChange={(e) => setFormData({ ...formData, contactNumber: e.target.value })}
-                placeholder={t("intake.phonePlaceholder") || "e.g. +91 98480 12345"}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  setFormData({ ...formData, contactNumber: val });
+                }}
+                placeholder={t("intake.phonePlaceholder") || "Enter 10-digit mobile number"}
                 className="w-full px-4 py-3 rounded-xl border border-slate-300 text-xs sm:text-sm font-bold font-mono text-slate-900 focus:ring-2 focus:ring-[#002147] focus:outline-none"
               />
             </div>
@@ -1037,9 +1071,9 @@ export const StepCitizenIntakeForm: React.FC<StepCitizenIntakeFormProps> = ({
         </div>
 
         {/* ------------------------------------------------------------- */}
-        {/* QUESTION 6: SC CASTE STATUS (YES / NO) */}
+        {/* QUESTION 6: SOCIAL / CASTE CATEGORY SELECTION */}
         {/* ------------------------------------------------------------- */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm hover:border-[#002147]/40 transition-all space-y-4">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm hover:border-[#002147]/40 transition-all space-y-5">
           <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-3">
             <div className="flex items-center space-x-3">
               <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#002147] border border-blue-200 flex items-center justify-center font-black text-sm">
@@ -1047,10 +1081,10 @@ export const StepCitizenIntakeForm: React.FC<StepCitizenIntakeFormProps> = ({
               </div>
               <div>
                 <h3 className="text-base sm:text-lg font-black text-[#002147]">
-                  {t("intake.q6_title") || "6. Do you belong to Scheduled Caste (SC) Community?"}
+                  {t("intake.q6_title") || "6. Select your Social / Caste Category"}
                 </h3>
                 <p className="text-xs text-slate-500">
-                  {t("intake.q6_desc") || "NSFDC schemes are statutory concessional loan programs reserved exclusively for Scheduled Caste beneficiaries."}
+                  {t("intake.q6_desc") || "In general: across all central ministries and state governments, India has over 5,000 welfare schemes. Select your category to view customized concessional schemes."}
                 </p>
               </div>
             </div>
@@ -1061,7 +1095,7 @@ export const StepCitizenIntakeForm: React.FC<StepCitizenIntakeFormProps> = ({
                 onClick={() =>
                   handleSpeakQuestion(
                     6,
-                    `${t("intake.q6_title")}. ${t("intake.q6_desc")}`
+                    `${t("intake.q6_title") || "Select your Social or Caste Category"}. Across all central ministries and state governments, India has over 5,000 welfare schemes.`
                   )
                 }
                 className={`p-2.5 rounded-xl border transition-all ${activeSpeakingQ === 6
@@ -1080,51 +1114,110 @@ export const StepCitizenIntakeForm: React.FC<StepCitizenIntakeFormProps> = ({
                     ? "bg-red-600 text-white border-red-600 animate-pulse"
                     : "bg-gov-saffron/20 hover:bg-gov-saffron text-slate-950 border-gov-saffron/40"
                   }`}
-                title="Speak Yes/No"
+                title="Speak your Caste / Category"
               >
                 <Mic className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={() => setFormData({ ...formData, isScheduledCaste: true })}
-                className={`p-4 rounded-xl border text-xs sm:text-sm font-black transition-all flex items-center justify-center space-x-2 ${formData.isScheduledCaste
-                    ? "border-emerald-600 bg-emerald-50 text-emerald-950 ring-2 ring-emerald-500"
-                    : "border-slate-200 hover:bg-slate-50 text-slate-700"
-                  }`}
-              >
-                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                <span>{t("intake.yesSc") || "✓ Yes, I belong to Scheduled Caste (SC)"}</span>
-              </button>
+          {/* 5,000+ Schemes National Context Banner */}
+          <div className="bg-gradient-to-r from-blue-900 to-[#002147] text-white p-3.5 rounded-xl border border-gov-gold/40 flex items-center justify-between gap-3 text-xs shadow-sm">
+            <div className="flex items-center space-x-2">
+              <span className="text-base">🏛️</span>
+              <span className="font-bold">
+                <strong>In general:</strong> across all central ministries and state governments, India has over <strong>5,000 welfare schemes</strong>.
+              </span>
+            </div>
+            <span className="bg-gov-gold text-slate-950 px-2.5 py-0.5 rounded-full font-black text-[10px] uppercase shrink-0">
+              Pan-India Matrix
+            </span>
+          </div>
 
-              <button
-                type="button"
-                onClick={() => setFormData({ ...formData, isScheduledCaste: false })}
-                className={`p-4 rounded-xl border text-xs sm:text-sm font-black transition-all flex items-center justify-center space-x-2 ${!formData.isScheduledCaste
-                    ? "border-amber-600 bg-amber-50 text-amber-950 ring-2 ring-amber-500"
-                    : "border-slate-200 hover:bg-slate-50 text-slate-700"
-                  }`}
-              >
-                <span>✗ {t("intake.noSc") || "No, Other Community"}</span>
-              </button>
+          {/* Caste / Social Categories Grid */}
+          <div className="space-y-4">
+            <label className="text-xs font-black text-slate-700 block">
+              Choose your social / affirmative category:
+            </label>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {ALL_CASTE_CATEGORIES.map((cat) => {
+                const isSelected = formData.casteCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        casteCategory: cat.id,
+                        isScheduledCaste: cat.id === "SC",
+                      })
+                    }
+                    className={`p-3.5 rounded-xl border-2 text-left transition-all relative flex flex-col justify-between space-y-2 ${
+                      isSelected
+                        ? "border-[#002147] bg-slate-50 ring-2 ring-[#002147]/20 shadow-md"
+                        : "border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50/50"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">{cat.icon}</span>
+                        <div>
+                          <div className="text-xs font-black text-slate-900">{cat.label}</div>
+                          <div className="text-[10px] font-semibold text-slate-500">{cat.groupLabel}</div>
+                        </div>
+                      </div>
+                      {isSelected && (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-slate-100 font-bold">
+                      <span className="text-slate-600">Rate: {cat.concessionalRateFemale}% - {cat.concessionalRateMale}%</span>
+                      <span className="text-gov-navy truncate max-w-[120px]">{cat.apexCorporation.split(" ")[0]}</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
-            {!formData.isScheduledCaste && (
-              <div className="bg-amber-50 border border-amber-300 text-amber-900 p-4 rounded-xl text-xs space-y-1 animate-fadeIn">
-                <div className="font-black flex items-center space-x-1.5">
-                  <AlertCircle className="w-4 h-4 text-amber-700 shrink-0" />
-                  <span>Statutory Eligibility Alert</span>
+            {/* Active Selected Category Detailed Inspection Box */}
+            {(() => {
+              const activeCat = getCasteCategoryById(formData.casteCategory);
+              return (
+                <div className="bg-emerald-50/80 border-2 border-emerald-300 p-4 rounded-xl space-y-2 text-xs text-emerald-950 animate-fadeIn">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center space-x-2 font-black text-emerald-900 text-sm">
+                      <span>{activeCat.icon}</span>
+                      <span>Selected Category: {activeCat.label}</span>
+                    </div>
+                    <span className="bg-emerald-200 text-emerald-900 font-bold px-2.5 py-0.5 rounded-full text-[10px]">
+                      Apex: {activeCat.apexCorporation.split(" ")[0]}
+                    </span>
+                  </div>
+
+                  <p className="text-emerald-800 text-[11px] leading-relaxed">
+                    {activeCat.description}
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-emerald-200 text-[11px] font-semibold">
+                    <div className="bg-white/80 p-2 rounded-lg border border-emerald-200">
+                      <span className="text-slate-500 block text-[9px] uppercase">Financing Body</span>
+                      <strong className="text-slate-900">{activeCat.apexCorporation}</strong>
+                    </div>
+                    <div className="bg-white/80 p-2 rounded-lg border border-emerald-200">
+                      <span className="text-slate-500 block text-[9px] uppercase">Statutory Income Cap</span>
+                      <strong className="text-emerald-800">≤ ₹ {activeCat.incomeCeiling.toLocaleString()} / year</strong>
+                    </div>
+                    <div className="bg-white/80 p-2 rounded-lg border border-emerald-200">
+                      <span className="text-slate-500 block text-[9px] uppercase">Proof Document</span>
+                      <strong className="text-slate-900">{activeCat.certificateType}</strong>
+                    </div>
+                  </div>
                 </div>
-                <p>
-                  {t("intake.scWarning") ||
-                    "NSFDC concessional credit schemes are statutory welfare programs specifically chartered for Scheduled Caste (SC) citizens under the Ministry of Social Justice & Empowerment. A valid SC Community Certificate will be required and verified via PyTesseract OCR in Step 2."}
-                </p>
-              </div>
-            )}
+              );
+            })()}
           </div>
         </div>
 

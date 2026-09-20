@@ -123,7 +123,7 @@ export const FormalApplicationModal: React.FC<FormalApplicationModalProps> = ({
               {t("formalApp.title") || "GOVERNMENT OF INDIA • MINISTRY OF SOCIAL JUSTICE & EMPOWERMENT"}
             </div>
             <h1 className="text-lg sm:text-2xl font-black text-[#002147] tracking-tight">
-              {t("formalApp.nsfdcHeading") || "NATIONAL SCHEDULED CASTES FINANCE & DEVELOPMENT CORPORATION (NSFDC)"}
+              {t("formalApp.nsfdcHeading") || "SAMRIDDHI – NATIONAL UNIFIED CONCESSIONAL CREDIT & WELFARE PORTAL"}
             </h1>
             <div className="inline-block bg-[#002147] text-white px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mt-1">
               {t("formalApp.docName") || "STATUTORY CONCESSIONAL LOAN APPLICATION"}
@@ -325,7 +325,7 @@ export const FormalApplicationModal: React.FC<FormalApplicationModalProps> = ({
             </div>
             <p>
               {t("formalApp.declarationText") ||
-                "I hereby solemnly declare that all statements made in this application are true, complete and correct to the best of my knowledge and belief. I belong to the Scheduled Caste community and fulfill all statutory criteria prescribed by the National Scheduled Castes Finance & Development Corporation (NSFDC), Ministry of Social Justice & Empowerment, Government of India. In the event of any information being found false or ineligibility detected, my concessional loan is liable to be cancelled and recovered as per statutory government recovery proceedings."}
+                "I hereby solemnly declare that all statements made in this application are true, complete and correct to the best of my knowledge and belief. I fulfill all statutory criteria prescribed by the SAMRIDDHI Unified Portal, Ministry of Social Justice & Empowerment, Government of India. In the event of any information being found false or ineligibility detected, my concessional loan is liable to be cancelled and recovered as per statutory government recovery proceedings."}
             </p>
 
             <div className="pt-8 grid grid-cols-1 sm:grid-cols-2 gap-8 items-end border-t border-slate-300">
@@ -341,7 +341,7 @@ export const FormalApplicationModal: React.FC<FormalApplicationModalProps> = ({
 
               <div className="border-2 border-slate-400 rounded-xl p-3 bg-white text-center space-y-1">
                 <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                  {t("formalApp.digitalStamp") || "DIGITALLY GENERATED VIA NSFDC CITIZEN PORTAL"}
+                  {t("formalApp.digitalStamp") || "DIGITALLY GENERATED VIA SAMRIDDHI CITIZEN PORTAL"}
                 </div>
                 <div className="text-[11px] font-mono font-bold text-[#002147]">
                   AUTH-ID: {data.applicationId}-VERIFIED

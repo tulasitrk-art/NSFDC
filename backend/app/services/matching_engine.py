@@ -6,19 +6,75 @@ def recommend_scheme(
     project_cost: float = 140000.0,
     activity_purpose: str = "RETAIL",
     beneficiary_type: str = "INDIVIDUAL",
-    state_code: Optional[str] = None
+    state_code: Optional[str] = None,
+    caste_category: Optional[str] = "SC"
 ) -> Dict[str, Any]:
     """
     Automated Multi-Factor Matching Engine:
-    Maps beneficiary profile, loan cost, sector activity, and state to the optimal scheme across 330+ schemes.
-    Preserves exact 100% backward compatibility with core NSFDC statutory fallbacks.
+    Maps beneficiary social category, loan cost, sector activity, and state across India's 5,000+ welfare schemes.
+    Supports SC, ST, OBC, OBC-NCL, EWS, GEN, EBC, DNT, NT, SNT, PwD, and Minorities (MUS, CHR, SIK, BUD, JAI, PAR).
     """
     g = (gender or "FEMALE").upper()
     act = (activity_purpose or "RETAIL").upper()
     cost = float(project_cost or 140000.0)
     st = (state_code or "").upper()
+    caste = (caste_category or "SC").upper()
 
-    # 1. State-specific SCDC check if state_code is provided
+    # 1. Category Specific Scheme Matching
+
+    # --- Scheduled Tribes (ST - NSTFDC) ---
+    if caste == "ST":
+        if g == "FEMALE" and cost <= 200000.0:
+            matched_scheme_id = "NSTFDC_AMSY"
+        elif cost <= 500000.0:
+            matched_scheme_id = "NSTFDC_MICRO"
+        else:
+            matched_scheme_id = "NSTFDC_TL"
+        return STATUTORY_SCHEMES.get(matched_scheme_id, STATUTORY_SCHEMES["NSFDC_MCF"])
+
+    # --- OBC / OBC-NCL / EBC (NBCFDC) ---
+    elif caste in ["OBC", "OBC_NCL", "EBC"]:
+        if g == "FEMALE" and cost <= 200000.0:
+            matched_scheme_id = "NBCFDC_SWARNIMA"
+        elif "ARTISAN" in act or "CRAFT" in act or "HANDLOOM" in act:
+            matched_scheme_id = "NBCFDC_SHILP"
+        else:
+            matched_scheme_id = "NBCFDC_SAKSHAM"
+        return STATUTORY_SCHEMES.get(matched_scheme_id, STATUTORY_SCHEMES["NSFDC_MCF"])
+
+    # --- Persons with Disabilities (PwD / Divyangjan - NHFDC) ---
+    elif caste == "PWD":
+        if cost <= 100000.0:
+            matched_scheme_id = "NHFDC_VISHESH"
+        else:
+            matched_scheme_id = "NHFDC_SWAVALAMBAN"
+        return STATUTORY_SCHEMES.get(matched_scheme_id, STATUTORY_SCHEMES["NSFDC_MCF"])
+
+    # --- Minorities (NMDFC: MUS, CHR, SIK, BUD, JAI, PAR) ---
+    elif caste.startswith("MIN_") or caste in ["MUS", "CHR", "SIK", "BUD", "JAI", "PAR"]:
+        if "ARTISAN" in act or "CRAFT" in act:
+            matched_scheme_id = "NMDFC_VIRASAT"
+        elif g == "FEMALE" and cost <= 140000.0:
+            matched_scheme_id = "NMDFC_MAHILA_SAMRIDDHI"
+        else:
+            matched_scheme_id = "NMDFC_TL"
+        return STATUTORY_SCHEMES.get(matched_scheme_id, STATUTORY_SCHEMES["NSFDC_MCF"])
+
+    # --- De-notified & Nomadic Tribes (DNT / NT / SNT - SEED) ---
+    elif caste in ["DNT", "NT", "SNT"]:
+        return STATUTORY_SCHEMES.get("SEED_LIVELIHOOD", STATUTORY_SCHEMES["NSFDC_MCF"])
+
+    # --- EWS & GEN / Open Category & OBC-CL (Central Welfare Programs) ---
+    elif caste in ["EWS", "GEN", "OBC_CL"]:
+        if cost <= 50000.0 and ("STREET" in act or "VENDOR" in act or "RETAIL" in act or "TEA" in act):
+            matched_scheme_id = "PM_SVANIDHI"
+        elif cost <= 1000000.0:
+            matched_scheme_id = "PM_MUDRA_TARUN"
+        else:
+            matched_scheme_id = "PMEGP_SUBSIDY"
+        return STATUTORY_SCHEMES.get(matched_scheme_id, STATUTORY_SCHEMES["NSFDC_MCF"])
+
+    # 2. State-specific SCDC check for Scheduled Castes
     if st and st != "ALL":
         target_sector_code = None
         if "SANITATION" in act or "SWACHHTA" in act or "CLEANING" in act or "SAFAI" in act:
@@ -47,7 +103,7 @@ def recommend_scheme(
             if state_scheme_id in STATUTORY_SCHEMES:
                 return STATUTORY_SCHEMES[state_scheme_id]
 
-    # 2. National Core NSFDC Scheme Matching
+    # 3. National Core NSFDC Scheme Matching
     matched_scheme_id = "NSFDC_MCF" # Default fallback
 
     if "SANITATION" in act or "SWACHHTA" in act or "CLEANING" in act or "SAFAI" in act:

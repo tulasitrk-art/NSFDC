@@ -7,6 +7,26 @@ class UserGender(str, Enum):
     FEMALE = "FEMALE"
     TRANSGENDER = "TRANSGENDER"
 
+class CasteCategory(str, Enum):
+    SC = "SC"
+    ST = "ST"
+    OBC = "OBC"
+    OBC_NCL = "OBC_NCL"
+    OBC_CL = "OBC_CL"
+    EWS = "EWS"
+    GEN = "GEN"
+    EBC = "EBC"
+    DNT = "DNT"
+    NT = "NT"
+    SNT = "SNT"
+    PWD = "PWD"
+    MIN_MUS = "MIN_MUS"
+    MIN_CHR = "MIN_CHR"
+    MIN_SIK = "MIN_SIK"
+    MIN_BUD = "MIN_BUD"
+    MIN_JAI = "MIN_JAI"
+    MIN_PAR = "MIN_PAR"
+
 class PartnerTier(str, Enum):
     SCA = "SCA"
     PSB = "PSB"
@@ -27,7 +47,8 @@ class FinancialCalculationRequest(BaseModel):
     project_cost: float = Field(..., gt=0, description="Total project cost in INR")
     annual_family_income: float = Field(..., description="Annual family income in INR")
     gender: UserGender = Field(..., description="Gender of applicant")
-    scheme_id: str = Field(..., description="Target NSFDC scheme ID")
+    scheme_id: str = Field(..., description="Target scheme ID")
+    caste_category: Optional[str] = Field(default="SC", description="Social / Caste category code (SC, ST, OBC, OBC_NCL, EWS, GEN, DNT, PWD, MIN_MUS, etc.)")
 
 class FinancialCalculationResponse(BaseModel):
     scheme_id: str
@@ -45,6 +66,8 @@ class FinancialCalculationResponse(BaseModel):
     monthly_emi: float
     total_repayment: float
     statutory_eligible: bool = True
+    target_caste: Optional[str] = "SC"
+    apex_corporation: Optional[str] = None
 
 # --- OCR Schemas ---
 class OCRVerificationResponse(BaseModel):
@@ -52,8 +75,16 @@ class OCRVerificationResponse(BaseModel):
     extracted_certificate_number: Optional[str] = None
     issuing_authority: Optional[str] = None
     community_match: bool
+    detected_category: Optional[str] = None
+    matched_category_label: Optional[str] = None
     extracted_keywords: List[str]
     raw_text_preview: str
+    is_expired: bool = False
+    expiry_date: Optional[str] = None
+    validity_status: str = "LIFETIME_VALID"
+    ocr_verified: bool = True
+    valid: bool = True
+    error: Optional[str] = None
 
 # --- Routing Schemas ---
 class SpatialRoutingRequest(BaseModel):
@@ -93,6 +124,7 @@ class ApplicationCreateRequest(BaseModel):
     annual_income: float
     project_cost: float
     scheme_id: str
+    caste_category: Optional[str] = "SC"
     routed_partner_id: Optional[int] = None
     lat: Optional[float] = None
     lon: Optional[float] = None
@@ -106,6 +138,7 @@ class ApplicationResponse(BaseModel):
     annual_income: float
     project_cost: float
     scheme_id: Optional[str]
+    caste_category: Optional[str] = "SC"
     routed_partner_id: Optional[int]
     status: str
     ocr_verified: bool

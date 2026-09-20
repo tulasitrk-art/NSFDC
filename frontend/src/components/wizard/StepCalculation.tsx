@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useLanguage } from "@/lib/languageContext";
-import { Calculator, Volume2, Send, CheckCircle2, ShieldCheck, Landmark } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { Calculator, Volume2, Send, CheckCircle2, ShieldCheck, Landmark, ListChecks, RotateCcw } from "lucide-react";
 import { calculateFinancials, FinancialCalculationResponse } from "@/lib/api";
+import { getSchemeById, getSchemeRequirements } from "@/lib/schemes_db";
 
 interface StepCalculationProps {
   initialCost?: number;
@@ -26,6 +27,7 @@ export const StepCalculation: React.FC<StepCalculationProps> = ({
   const [annualIncome, setAnnualIncome] = useState(initialIncome);
   const [gender, setGender] = useState(initialGender);
   const [selectedScheme, setSelectedScheme] = useState(schemeId);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   const [calcResult, setCalcResult] = useState<FinancialCalculationResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -52,6 +54,14 @@ export const StepCalculation: React.FC<StepCalculationProps> = ({
     }
   };
 
+  const currentSchemeObj = getSchemeById(selectedScheme);
+  const reqs = getSchemeRequirements(currentSchemeObj);
+
+  const localizedSchemeTitle = t(`schemes.items.${currentSchemeObj.id}.title`);
+  const displaySchemeTitle = localizedSchemeTitle && !localizedSchemeTitle.startsWith("schemes.items") ? localizedSchemeTitle : currentSchemeObj.name;
+  const localizedCode = t(`schemes.codes.${currentSchemeObj.code}`);
+  const displayCode = localizedCode && !localizedCode.startsWith("schemes.codes") ? localizedCode : currentSchemeObj.code;
+
   const handleSpeechSummary = () => {
     if (!calcResult || typeof window === "undefined" || !("speechSynthesis" in window)) return;
 
@@ -60,9 +70,9 @@ export const StepCalculation: React.FC<StepCalculationProps> = ({
     let textToSpeak = `Your application for ${calcResult.scheme_name} has been processed. Total Project cost is Rupees ${calcResult.project_cost}. Government loan share is ${calcResult.govt_share_percent} percent, amounting to Rupees ${calcResult.principal_loan_amount}. Concessional interest rate is ${calcResult.applied_interest_rate} percent per annum with ${calcResult.moratorium_months} months grace period. Your monthly EMI will be Rupees ${calcResult.monthly_emi}.`;
 
     if (currentLang === "te") {
-      textToSpeak = `${calcResult.scheme_name} పథకం కింద మీ దరఖాస్తు సిద్ధంగా ఉంది. ప్రభుత్వం నుండి లభించే అప్పు రూపాయిలు ${calcResult.principal_loan_amount}. వడ్డీ రేటు సంవత్సరానికి ${calcResult.applied_interest_rate} శాతం. నెలకు ఇఎంఐ రూపాయిలు ${calcResult.monthly_emi}.`;
+      textToSpeak = `${displaySchemeTitle} పథకం కింద మీ దరఖాస్తు సిద్ధంగా ఉంది. ప్రభుత్వం నుండి లభించే అప్పు రూపాయిలు ${calcResult.principal_loan_amount}. వడ్డీ రేటు సంవత్సరానికి ${calcResult.applied_interest_rate} శాతం. నెలకు ఇఎంఐ రూపాయిలు ${calcResult.monthly_emi}.`;
     } else if (currentLang === "hi") {
-      textToSpeak = `${calcResult.scheme_name} के तहत आपका आवेदन संसाधित हो गया है। सरकारी ऋण राशि रुपये ${calcResult.principal_loan_amount} है। ब्याज दर ${calcResult.applied_interest_rate} प्रतिशत प्रति वर्ष है। आपकी मासिक ईएमआई रुपये ${calcResult.monthly_emi} होगी।`;
+      textToSpeak = `${displaySchemeTitle} के तहत आपका आवेदन संसाधित हो गया है। सरकारी ऋण राशि रुपये ${calcResult.principal_loan_amount} है। ब्याज दर ${calcResult.applied_interest_rate} प्रतिशत प्रति वर्ष है। आपकी मासिक ईएमआई रुपये ${calcResult.monthly_emi} होगी।`;
     }
 
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
@@ -105,7 +115,7 @@ export const StepCalculation: React.FC<StepCalculationProps> = ({
       {/* Inputs Strip (Mode B Direct Adjustment) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
         <div>
-          <label className="text-[11px] font-bold text-slate-700 block mb-1">Project Cost (₹)</label>
+          <label className="text-[11px] font-bold text-slate-700 block mb-1">{t("calculator.totalProjectCost") || "Project Cost (₹)"}</label>
           <input
             type="number"
             value={projectCost}
@@ -115,7 +125,7 @@ export const StepCalculation: React.FC<StepCalculationProps> = ({
         </div>
 
         <div>
-          <label className="text-[11px] font-bold text-slate-700 block mb-1">Annual Family Income (₹)</label>
+          <label className="text-[11px] font-bold text-slate-700 block mb-1">{t("calculator.annualFamilyIncome") || "Annual Family Income (₹)"}</label>
           <input
             type="number"
             value={annualIncome}
@@ -125,54 +135,53 @@ export const StepCalculation: React.FC<StepCalculationProps> = ({
         </div>
 
         <div>
-          <label className="text-[11px] font-bold text-slate-700 block mb-1">Gender</label>
+          <label className="text-[11px] font-bold text-slate-700 block mb-1">{t("calculator.beneficiaryGender") || "Gender"}</label>
           <select
             value={gender}
             onChange={(e) => setGender(e.target.value)}
             className="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs font-extrabold text-slate-900"
           >
-            <option value="FEMALE">Female (5.0% - 5.5% Concession)</option>
-            <option value="MALE">Male (6.5% - 7.5% Standard Rate)</option>
+            <option value="FEMALE">{t("calculator.femaleRateLabel") || "Female (5.0% - 5.5% Concession)"}</option>
+            <option value="MALE">{t("calculator.maleRateLabel") || "Male (6.5% - 7.5% Standard Rate)"}</option>
           </select>
         </div>
       </div>
 
       {/* Financial Matrix Cards */}
       {calcResult && (
-        <div className="space-y-4">
-          {/* Scheme Banner */}
-          <div className="bg-[#002147] text-white p-5 rounded-xl border-l-4 border-gov-saffron flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div className="bg-[#002147] text-white p-6 rounded-2xl border-l-4 border-gov-saffron shadow-md space-y-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <div>
               <span className="text-[10px] font-extrabold text-gov-gold uppercase tracking-wider block">{t("wizard.matchedScheme")}</span>
-              <h4 className="text-base font-black">{calcResult.scheme_name}</h4>
+              <h4 className="text-base font-black">{displaySchemeTitle}</h4>
             </div>
 
-            <div className="text-right">
-              <span className="text-xs text-slate-300 block">Subsidized Interest Rate</span>
-              <strong className="text-lg font-black text-gov-saffron">{calcResult.applied_interest_rate}% p.a.</strong>
+            <div className="text-right bg-white/10 px-3 py-1.5 rounded-xl border border-white/20">
+              <span className="text-[10px] text-slate-300 block uppercase font-bold">{t("calculator.subsidizedRate") || "Subsidized Interest Rate"}</span>
+              <strong className="text-lg font-black text-gov-saffron">{calcResult.applied_interest_rate}% {t("schemes.pa") || "p.a."}</strong>
             </div>
           </div>
 
           {/* Key Breakdown Metrics Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-1">
-              <span className="text-slate-400 font-bold uppercase text-[10px]">Govt Share ({calcResult.govt_share_percent}%)</span>
-              <div className="text-base font-black text-emerald-700">₹ {calcResult.principal_loan_amount.toLocaleString("en-IN")}</div>
+            <div className="bg-white/10 p-4 rounded-xl border border-white/15 space-y-1">
+              <span className="text-slate-300 font-bold uppercase text-[10px]">{t("schemes.govtShare") || "Govt Share"} ({calcResult.govt_share_percent}%)</span>
+              <div className="text-base font-black text-emerald-400">₹ {calcResult.principal_loan_amount.toLocaleString("en-IN")}</div>
             </div>
 
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-1">
-              <span className="text-slate-400 font-bold uppercase text-[10px]">Beneficiary Margin ({calcResult.beneficiary_margin_percent}%)</span>
-              <div className="text-base font-black text-slate-900">₹ {calcResult.beneficiary_margin_money.toLocaleString("en-IN")}</div>
+            <div className="bg-white/10 p-4 rounded-xl border border-white/15 space-y-1">
+              <span className="text-slate-300 font-bold uppercase text-[10px]">{t("calculator.selfMargin") || "Beneficiary Margin"} ({calcResult.beneficiary_margin_percent}%)</span>
+              <div className="text-base font-black text-white">₹ {calcResult.beneficiary_margin_money.toLocaleString("en-IN")}</div>
             </div>
 
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-1">
-              <span className="text-slate-400 font-bold uppercase text-[10px]">Moratorium Grace</span>
-              <div className="text-base font-black text-sky-700">{calcResult.moratorium_months} Months</div>
+            <div className="bg-white/10 p-4 rounded-xl border border-white/15 space-y-1">
+              <span className="text-slate-300 font-bold uppercase text-[10px]">{t("schemes.moratorium") || "Moratorium Grace"}</span>
+              <div className="text-base font-black text-sky-300">{calcResult.moratorium_months} {t("schemes.mos") || "Months"}</div>
             </div>
 
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-1">
-              <span className="text-slate-400 font-bold uppercase text-[10px]">Post-Grace Monthly EMI</span>
-              <div className="text-base font-black text-gov-saffron">₹ {calcResult.monthly_emi.toLocaleString("en-IN")} / Mo</div>
+            <div className="bg-white/10 p-4 rounded-xl border border-white/15 space-y-1">
+              <span className="text-slate-300 font-bold uppercase text-[10px]">{t("calculator.monthlyEmi") || "Post-Grace Monthly EMI"}</span>
+              <div className="text-base font-black text-gov-saffron">₹ {calcResult.monthly_emi.toLocaleString("en-IN")} / {t("schemes.mos") || "Mo"}</div>
             </div>
           </div>
         </div>
@@ -183,7 +192,7 @@ export const StepCalculation: React.FC<StepCalculationProps> = ({
         <button
           type="button"
           onClick={() => calcResult && onDispatch(calcResult)}
-          className="bg-gov-saffron hover:bg-amber-400 text-slate-950 font-black px-8 py-3.5 rounded-xl text-xs sm:text-sm flex items-center space-x-2 shadow-lg transition-all transform hover:-translate-y-0.5"
+          className="bg-gov-saffron hover:bg-amber-400 text-slate-950 font-black px-8 py-3.5 rounded-xl text-xs sm:text-sm flex items-center space-x-2 shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer"
         >
           <Send className="w-4 h-4" />
           <span>{t("wizard.confirmDispatch")}</span>

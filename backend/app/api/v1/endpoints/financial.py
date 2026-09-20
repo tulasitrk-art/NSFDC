@@ -10,38 +10,42 @@ router = APIRouter()
 @router.post("/calculate", response_model=FinancialCalculationResponse)
 def compute_amortization_schedule(req: FinancialCalculationRequest):
     """
-    Computes NSFDC Concessional Loan Amortization Schedule.
-    Enforces Statutory Hard Gate: annual_family_income <= 500,000.00 INR.
+    Computes Concessional Loan Amortization Schedule across all welfare categories.
+    Enforces category-specific statutory income ceilings.
     """
     result = calculate_amortization(
         project_cost=req.project_cost,
         annual_family_income=req.annual_family_income,
         gender=req.gender,
-        scheme_id=req.scheme_id
+        scheme_id=req.scheme_id,
+        caste_category=req.caste_category
     )
     return result
 
 @router.post("/recommend-scheme")
 def match_beneficiary_scheme(payload: Dict[str, Any]):
     """
-    Matches applicant activity, cost, gender, and state to recommended scheme.
+    Matches applicant social category, activity, cost, gender, and state to recommended scheme.
     """
     gender = payload.get("gender", "FEMALE")
     cost = float(payload.get("project_cost", 140000.0))
     activity = payload.get("activity_purpose", "RETAIL")
     state_code = payload.get("state_code")
+    caste_category = payload.get("caste_category", "SC")
     
     scheme_data = recommend_scheme(
         gender=gender,
         project_cost=cost,
         activity_purpose=activity,
-        state_code=state_code
+        state_code=state_code,
+        caste_category=caste_category
     )
     return scheme_data
 
 @router.get("/schemes")
 def get_all_statutory_schemes(
     category: Optional[str] = None,
+    target_caste: Optional[str] = None,
     state_code: Optional[str] = None,
     search: Optional[str] = None,
     limit: Optional[int] = None,
@@ -49,7 +53,7 @@ def get_all_statutory_schemes(
 ):
     """
     Returns directory of statutory schemes (over 330 schemes across Central Apex and State SCDCs).
-    Supports optional filtering by category, state, and search query.
+    Supports optional filtering by category, target_caste, state, and search query.
     """
     all_schemes = list(STATUTORY_SCHEMES.values())
 
@@ -59,6 +63,13 @@ def get_all_statutory_schemes(
         filtered = [
             s for s in filtered
             if s.get("state_code", "ALL") in ["ALL", st]
+        ]
+
+    if target_caste and target_caste.upper() != "ALL":
+        tc = target_caste.upper()
+        filtered = [
+            s for s in filtered
+            if s.get("target_caste", "SC").upper() == tc or s.get("target_caste", "ALL").upper() == "ALL"
         ]
 
     if category and category.upper() != "ALL":

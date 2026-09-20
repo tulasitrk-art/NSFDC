@@ -33,6 +33,7 @@ function ApplyPageContent() {
     address: "",
     pinCode: "",
     isScheduledCaste: true,
+    casteCategory: "SC",
     qualification: "GRADUATE",
     qualificationOther: "",
     annualIncome: 180000,
@@ -107,7 +108,7 @@ function ApplyPageContent() {
 
   const handleFinalDispatch = async (branch?: BranchRoute) => {
     setIsSubmitting(true);
-    let finalRef = `SC-2026-${intakeData.stateCode}${Math.floor(1000 + Math.random() * 9000)}`;
+    let finalRef = `APP-2026-${intakeData.stateCode}${Math.floor(1000 + Math.random() * 9000)}`;
 
     try {
       const leadRes = await dispatchLead({
@@ -117,6 +118,7 @@ function ApplyPageContent() {
         annual_income: intakeData.annualIncome,
         project_cost: intakeData.projectCost,
         scheme_id: calcResultData?.scheme_id || "NSFDC_MCF",
+        caste_category: intakeData.casteCategory,
         routed_partner_id: branch?.partner_id || selectedBranch?.partner_id || 1,
         ocr_verified: true,
       });
@@ -135,11 +137,12 @@ function ApplyPageContent() {
       gender: intakeData.gender,
       annual_income: intakeData.annualIncome,
       project_cost: intakeData.projectCost,
+      caste_category: intakeData.casteCategory,
       scheme_id: calcResultData?.scheme_id || "NSFDC_MCF",
       scheme_name: calcResultData?.scheme_name || "Micro Credit Finance Scheme (MCF)",
       status: "ROUTED_TO_CHANNEL",
       created_at: new Date().toISOString(),
-      partner_name: branch?.partner_name || selectedBranch?.partner_name || `${intakeData.stateName} State SC Cooperative Finance Corp`,
+      partner_name: branch?.partner_name || selectedBranch?.partner_name || `${intakeData.stateName} State SC/ST/BC Cooperative Finance Corp`,
       branch_name: branch?.branch_name || selectedBranch?.branch_name || `District Central Office ${intakeData.district}`,
     };
 
@@ -287,9 +290,10 @@ function ApplyPageContent() {
           />
         )}
 
-        {/* STEP 2: SC CERTIFICATE OCR VERIFICATION */}
+        {/* STEP 2: CASTE & COMMUNITY CERTIFICATE OCR VERIFICATION */}
         {activeStep === 2 && (
           <StepDocumentUpload
+            targetCaste={intakeData.casteCategory}
             onVerified={handleStep2Verified}
             onGoBack={() => setActiveStep(1)}
             onGoForward={() => setActiveStep(3)}
@@ -304,6 +308,7 @@ function ApplyPageContent() {
             initialGender={intakeData.gender}
             initialActivity={intakeData.assistanceType}
             initialStateCode={intakeData.stateCode}
+            initialCasteCategory={intakeData.casteCategory}
             onProceedToDispatch={handleStep3Proceed}
             onGoBack={() => setActiveStep(2)}
             onGoForward={() => setActiveStep(4)}
