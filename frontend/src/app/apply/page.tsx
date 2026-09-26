@@ -230,7 +230,7 @@ function ApplyPageContent() {
         </div>
         <h1 className="text-2xl sm:text-3xl font-black">Citizen Loan Intake & Amortization Portal</h1>
         <p className="text-xs sm:text-sm text-slate-200">
-          Guided statutory concessional pipeline with native multi-lingual speech-to-text (STT), text-to-speech (TTS), SC Certificate OCR, and Pan-India spatial routing.
+          Guided statutory concessional pipeline with native multi-lingual speech-to-text (STT), text-to-speech (TTS), All-Caste Community Certificate OCR, and Pan-India spatial routing.
         </p>
       </div>
 
@@ -256,7 +256,7 @@ function ApplyPageContent() {
                 : "border-slate-200 text-slate-600 hover:bg-slate-50"
             }`}
           >
-            2. SC Certificate OCR
+            2. Community Certificate OCR (All Castes)
           </button>
 
           <button
@@ -294,6 +294,13 @@ function ApplyPageContent() {
         {activeStep === 2 && (
           <StepDocumentUpload
             targetCaste={intakeData.casteCategory}
+            onCasteChange={(newCaste) =>
+              setIntakeData((prev) => ({
+                ...prev,
+                casteCategory: newCaste,
+                isScheduledCaste: newCaste === "SC",
+              }))
+            }
             onVerified={handleStep2Verified}
             onGoBack={() => setActiveStep(1)}
             onGoForward={() => setActiveStep(3)}
@@ -347,7 +354,7 @@ function ApplyPageContent() {
                   <div className="text-xs font-bold text-emerald-200 uppercase tracking-wider">Application Dispatched to SCA Desk</div>
                   <h2 className="text-2xl sm:text-3xl font-black text-white">Reference ID: <span className="text-gov-gold">{dispatchedRef}</span></h2>
                   <p className="text-xs text-emerald-200">
-                    Lead assigned to district officer desk for applicant <strong>{intakeData.applicantName}</strong> ({intakeData.contactNumber}) with authenticated SC caste proof.
+                    Lead assigned to district officer desk for applicant <strong>{intakeData.applicantName}</strong> ({intakeData.contactNumber}) with authenticated {intakeData.casteCategory} community / caste certificate proof.
                   </p>
                 </div>
 

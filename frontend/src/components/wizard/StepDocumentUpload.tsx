@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
-import { Upload, FileCheck, AlertCircle, ArrowRight, ShieldCheck, CheckCircle2, ArrowLeft, XCircle } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Upload, FileCheck, AlertCircle, ArrowRight, ShieldCheck, CheckCircle2, ArrowLeft, XCircle, Globe2, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { OCRVerificationResponse, verifyCertificateOCR } from "@/lib/api";
-import { getCasteCategoryById } from "@/lib/caste_categories";
+import { ALL_CASTE_CATEGORIES, getCasteCategoryById } from "@/lib/caste_categories";
 
 interface StepDocumentUploadProps {
   onVerified: (data: OCRVerificationResponse) => void;
   onGoBack?: () => void;
   onGoForward?: () => void;
   targetCaste?: string;
+  onCasteChange?: (casteId: string) => void;
 }
 
 export const StepDocumentUpload: React.FC<StepDocumentUploadProps> = ({
@@ -18,14 +19,30 @@ export const StepDocumentUpload: React.FC<StepDocumentUploadProps> = ({
   onGoBack,
   onGoForward,
   targetCaste = "SC",
+  onCasteChange,
 }) => {
   const { t } = useLanguage();
+  const [activeCaste, setActiveCaste] = useState<string>(targetCaste || "SC");
   const [file, setFile] = useState<File | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [ocrResult, setOcrResult] = useState<OCRVerificationResponse | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const casteObj = getCasteCategoryById(targetCaste);
+  useEffect(() => {
+    if (targetCaste && targetCaste !== activeCaste) {
+      setActiveCaste(targetCaste);
+    }
+  }, [targetCaste]);
+
+  const handleCasteChange = (newCaste: string) => {
+    setActiveCaste(newCaste);
+    setOcrResult(null);
+    if (onCasteChange) {
+      onCasteChange(newCaste);
+    }
+  };
+
+  const casteObj = getCasteCategoryById(activeCaste);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -42,7 +59,7 @@ export const StepDocumentUpload: React.FC<StepDocumentUploadProps> = ({
     setOcrResult(null);
 
     try {
-      const result = await verifyCertificateOCR(file, targetCaste);
+      const result = await verifyCertificateOCR(file, activeCaste);
       setOcrResult(result);
     } catch (e: any) {
       setOcrResult({
@@ -73,9 +90,14 @@ export const StepDocumentUpload: React.FC<StepDocumentUploadProps> = ({
             </button>
           )}
 
-          <h3 className="text-base sm:text-lg font-black text-[#002147]">
-            Step 2: Community & Eligibility Document OCR
-          </h3>
+          <div>
+            <h3 className="text-base sm:text-lg font-black text-[#002147]">
+              Step 2: Community & Eligibility Document OCR
+            </h3>
+            <p className="text-xs text-slate-500">
+              Universal AI Document Verification for All Castes, Communities & Affirmative Classifications
+            </p>
+          </div>
         </div>
 
         {onGoForward && ocrResult && ocrResult.valid && (
@@ -89,13 +111,60 @@ export const StepDocumentUpload: React.FC<StepDocumentUploadProps> = ({
         )}
       </div>
 
+      {/* UNIVERSAL ALL-CASTES VERIFICATION INFORMATIVE BANNER */}
+      <div className="bg-gradient-to-r from-blue-900 via-[#002147] to-indigo-950 text-white p-5 rounded-2xl border-2 border-gov-gold/40 shadow-md space-y-2.5">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center space-x-2 text-gov-gold font-black text-xs uppercase tracking-wider">
+            <Globe2 className="w-4 h-4 text-gov-saffron" />
+            <span>Universal Statutory OCR Engine • Active for All Castes & Communities</span>
+          </div>
+          <span className="bg-gov-saffron/20 border border-gov-saffron text-gov-saffron px-2.5 py-0.5 rounded-full text-[10px] font-bold">
+            All 18 Affirmative Groups Supported
+          </span>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+          OCR Verification is <strong className="text-white underline decoration-gov-saffron decoration-2">universal for all social categories and castes</strong> — not just SC. The SAMRIDDHI AI engine verifies official government certificates across <strong>Scheduled Castes (SC)</strong>, <strong>Scheduled Tribes (ST)</strong>, <strong>Other Backward Classes (OBC / OBC-NCL)</strong>, <strong>Economically Weaker Sections (EWS)</strong>, <strong>General / EBC</strong>, <strong>Minorities (Muslim, Christian, Sikh, Buddhist, Jain, Parsi)</strong>, <strong>Persons with Disabilities (PwD)</strong>, and <strong>Safai Karamcharis</strong>.
+        </p>
+      </div>
+
+      {/* Category Confirmation / Switcher on Step 2 */}
+      <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <label className="text-xs font-black text-slate-800 flex items-center space-x-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-gov-navy" />
+            <span>Certificate Category to Authenticate:</span>
+          </label>
+          <span className="text-[11px] font-semibold text-slate-500">
+            Selected: <strong className="text-[#002147] font-black">{casteObj.label}</strong>
+          </span>
+        </div>
+
+        <select
+          value={activeCaste}
+          onChange={(e) => handleCasteChange(e.target.value)}
+          className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-bold bg-white text-slate-900 focus:ring-2 focus:ring-[#002147] focus:outline-none cursor-pointer"
+        >
+          {ALL_CASTE_CATEGORIES.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.icon} {cat.label} — {cat.apexCorporation.split(" ")[0]}
+            </option>
+          ))}
+        </select>
+        <p className="text-[11px] text-slate-500">
+          You can change the target category at any time. The OCR model adapts keywords and validation rules automatically.
+        </p>
+      </div>
+
+      {/* Target Document Details Card */}
       <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between gap-3 text-xs">
         <div>
           <span className="text-slate-500 font-bold block text-[10px] uppercase">Target Verification Document</span>
           <strong className="text-slate-900 font-black text-sm">{casteObj.certificateType}</strong>
-          <p className="text-[11px] text-slate-600">Category: <strong>{casteObj.label}</strong> • Governing Apex: <strong>{casteObj.apexCorporation.split(" ")[0]}</strong></p>
+          <p className="text-[11px] text-slate-600">
+            Category: <strong>{casteObj.label}</strong> • Governing Apex: <strong>{casteObj.apexCorporation.split(" ")[0]}</strong>
+          </p>
         </div>
-        <span className="text-2xl">{casteObj.icon}</span>
+        <span className="text-3xl">{casteObj.icon}</span>
       </div>
 
       {/* Upload Dropzone */}
@@ -110,10 +179,13 @@ export const StepDocumentUpload: React.FC<StepDocumentUploadProps> = ({
             <div className="w-12 h-12 bg-gov-saffron/20 border border-gov-saffron text-slate-900 rounded-full flex items-center justify-center mx-auto">
               <Upload className="w-6 h-6 text-gov-saffron" />
             </div>
-            <div className="text-xs font-bold text-slate-800">
-              Drag & Drop {casteObj.shortName} Certificate / Verification Image here
+            <div className="text-xs sm:text-sm font-bold text-slate-800">
+              Drag & Drop {casteObj.shortName} Certificate / Official Document here
             </div>
-            <div className="text-[11px] text-slate-500">Supports PNG, JPG, JPEG, WEBP, PDF up to 10MB</div>
+            <div className="text-[11px] text-slate-500">
+              Universal AI OCR Engine automatically detects caste classification, issuing Tahsildar / Revenue office, certificate number & validity
+            </div>
+            <div className="text-[10px] text-slate-400">Supports PNG, JPG, JPEG, WEBP, PDF up to 10MB</div>
           </div>
         )}
 
@@ -122,15 +194,15 @@ export const StepDocumentUpload: React.FC<StepDocumentUploadProps> = ({
           accept="image/*,.pdf"
           onChange={handleFileChange}
           className="hidden"
-          id="sc-cert-upload"
+          id="caste-cert-upload"
         />
 
         <div className="pt-2 flex justify-center gap-3">
           <label
-            htmlFor="sc-cert-upload"
+            htmlFor="caste-cert-upload"
             className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer transition-colors"
           >
-            {file ? "Choose Different Image" : "Browse Computer Files"}
+            {file ? "Choose Different Document" : "Browse Computer Files"}
           </label>
 
           {file && !ocrResult && (
@@ -143,7 +215,7 @@ export const StepDocumentUpload: React.FC<StepDocumentUploadProps> = ({
               {isVerifying ? (
                 <>
                   <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                  <span>Running Pytesseract Multi-Category OCR...</span>
+                  <span>Running Universal Multi-Category OCR...</span>
                 </>
               ) : (
                 <>
@@ -172,7 +244,7 @@ export const StepDocumentUpload: React.FC<StepDocumentUploadProps> = ({
             </div>
           )}
           <div className="pt-2 text-[11px] font-bold text-red-950">
-            Please re-upload a valid/renewed official certificate from the issuing Revenue Department / Tahsildar / Medical Board.
+            Please re-upload a valid/renewed official certificate from the issuing Revenue Department / Tahsildar / Competent Authority for {casteObj.label}.
           </div>
         </div>
       )}
